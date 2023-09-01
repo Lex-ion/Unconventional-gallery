@@ -158,12 +158,11 @@ namespace Unconventional_galery
             // We make the mouse cursor invisible and captured so we can have proper FPS-camera movement.
             CursorState = CursorState.Grabbed;
 
-            _objects.Add(new GameObject(_camera, _vertices, GameObjectType.OBJECT_WALL, new Vector3(0, 2, 0), new Vector3(45, 45, 0),new Vector3(10,10,10)));
-            _objects.Add(new GameObject(_camera, _verts, GameObjectType.OBJECT_FLOOR, new Vector3(2, 0, 0), new Vector3(0, 45, 0), Vector3.One));
+
+            _objects = Data.MapLoader(_camera);
             Stopwatch stopwatch = new Stopwatch();
             Stopwatch = stopwatch;
             Stopwatch.Start();
-            _objects = Data.MapLoader(_camera);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -192,7 +191,7 @@ namespace Unconventional_galery
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
-           // _objects[0]._scale = Vector3.One * (float)Math.Sin(_time);
+            _objects[0]._scale = Vector3.One * (float)Math.Sin(_time);
 
             foreach (GameObject obj in _objects)
             {
