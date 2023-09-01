@@ -100,6 +100,8 @@ namespace Unconventional_galery
         string[] _files = Directory.GetFiles("Resources");
         int index = 0;
 
+        List<GameObject> _objects = new List<GameObject>();
+
         protected override void OnLoad()
         {
             base.OnLoad();
@@ -116,7 +118,7 @@ namespace Unconventional_galery
 
             _elementBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices , BufferUsageHint.StaticDraw);
 
             // The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
@@ -146,6 +148,8 @@ namespace Unconventional_galery
 
             // We make the mouse cursor invisible and captured so we can have proper FPS-camera movement.
             CursorState = CursorState.Grabbed;
+
+            _objects.Add(new GameObject(_camera, _vertices, GameObjectType.OBJECT_WALL, new Vector3(0, 2, 0), new Vector3(45, 45, 0)));
 
             Stopwatch stopwatch = new Stopwatch();
             Stopwatch = stopwatch;
@@ -177,6 +181,8 @@ namespace Unconventional_galery
             _shader.Use();
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+
+            _objects[0].Render();
 
             SwapBuffers();
         }
