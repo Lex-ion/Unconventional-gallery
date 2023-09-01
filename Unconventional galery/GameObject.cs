@@ -135,6 +135,11 @@ namespace Unconventional_galery
 
         public void Render()
         {
+          //  GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+            GL.BindVertexArray(_vertexArrayObject);
+
+
             Matrix4 model = Matrix4.CreateScale(_scale)
                 * Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(_rotation.Z)) 
                 * Matrix4.CreateRotationY(MathHelper.DegreesToRadians(_rotation.Y))

@@ -35,7 +35,7 @@ namespace Unconventional_galery
         // Because we're adding a texture, we modify the vertex array to include texture coordinates.
         // Texture coordinates range from 0.0 to 1.0, with (0.0, 0.0) representing the bottom left, and (1.0, 1.0) representing the top right.
         // The new layout is three floats to create a vertex, then two floats to create the coordinates.
-        float[] _vertices = {
+       float[] _vertices = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
      0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -78,7 +78,7 @@ namespace Unconventional_galery
     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
-
+       
         private readonly uint[] _indices =
         {
             0, 1, 3,
@@ -191,7 +191,7 @@ namespace Unconventional_galery
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
-            _objects[0]._scale = Vector3.One * (float)Math.Sin(_time);
+          //  _objects[0]._scale += Vector3.One * (float)Math.Sin(_time);
 
             foreach (GameObject obj in _objects)
             {
