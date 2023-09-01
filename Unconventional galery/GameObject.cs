@@ -65,7 +65,7 @@ namespace Unconventional_galery
             "Shaders/shader.frag"
         };
 
-       public  GameObject(Camera camera, float[] vertices ,GameObjectType gameObjectType, Vector3 worldSpaceCords, Vector3 worldSpaceRot, Vector3 scale, string[] shadersPath = null, int textureOverride=-1,float[] indices = null)
+       public  GameObject(Camera camera, float[] vertices ,GameObjectType gameObjectType, Vector3 worldSpaceCords, Vector3 worldSpaceRot, Vector3 scale, int textureOverride=-1,float[] indices = null, string[] shadersPath = null )
         {
             _camera = camera;
             _vertices = vertices;

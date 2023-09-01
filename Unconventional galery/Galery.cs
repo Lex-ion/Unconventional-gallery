@@ -23,6 +23,15 @@ namespace Unconventional_galery
         {
         }
 
+        float[] _verts = {
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f
+        };
+
         // Because we're adding a texture, we modify the vertex array to include texture coordinates.
         // Texture coordinates range from 0.0 to 1.0, with (0.0, 0.0) representing the bottom left, and (1.0, 1.0) representing the top right.
         // The new layout is three floats to create a vertex, then two floats to create the coordinates.
@@ -150,10 +159,11 @@ namespace Unconventional_galery
             CursorState = CursorState.Grabbed;
 
             _objects.Add(new GameObject(_camera, _vertices, GameObjectType.OBJECT_WALL, new Vector3(0, 2, 0), new Vector3(45, 45, 0),new Vector3(10,10,10)));
-            
+            _objects.Add(new GameObject(_camera, _verts, GameObjectType.OBJECT_FLOOR, new Vector3(2, 0, 0), new Vector3(0, 45, 0), Vector3.One));
             Stopwatch stopwatch = new Stopwatch();
             Stopwatch = stopwatch;
             Stopwatch.Start();
+            _objects = Data.MapLoader(_camera);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -182,8 +192,12 @@ namespace Unconventional_galery
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
-            _objects[0]._scale = Vector3.One * (float)Math.Sin(_time);
-            _objects[0].Render();
+           // _objects[0]._scale = Vector3.One * (float)Math.Sin(_time);
+
+            foreach (GameObject obj in _objects)
+            {
+                obj.Render();
+            }
 
             SwapBuffers();
         }
