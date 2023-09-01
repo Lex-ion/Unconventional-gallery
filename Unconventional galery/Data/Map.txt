@@ -1,8 +1,24 @@
+DebugKey is for easier searching in file
+GameObjectType is for setting type of object, use -1 when your object represent something else than main types. Every type is having its default texture
+WSC is WorldSpaceCords '|' is separator
+WSR is WorldSpaceRot '|' is separator
+Scale is used for scaling '|' is separator
+Override changes the texture of object, override dont have to be present while you dont want to change texture of object from its default. But when using -1 GOT you have to specify override!
+also dont put ',' after Scale if you dont want to specify override
+
+under "VERTICES" you set your vertex data for object - X,Y,Z,TextureX,TextureY, nextVertexData
+
+
+always separete with ','
+you dont have to write variable name all you have to do is always put ':' before its value.
+Override:5 and :5 is equal just keep the order of variables
+
 NEW
+DebugKey:scaled,
 GameObjectType:-1,
 WSC:-1|0|0,
 WSR:0|0|0,
-Scale:1|5|1,
+Scale:1|1.5f|1,
 Override:3,
 VERTICES
 -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -46,8 +62,9 @@ VERTICES
  0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 -0.5f,  0.5f, -0.5f,  0.0f, 1.0fNEW
+DebugKey:rotated,
 GameObjectType:0,
-WSC:1|0|3,
+WSC:1|0|-3,
 WSR:100|45|25,
 Scale:1|1|1,
 Override:-1,
@@ -93,3 +110,13 @@ VERTICES
  0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+NEW
+DebugKey:triangle,
+GameObjectType:0,
+WSC:0|0|5,
+WSR:0|0|0,
+Scale:1|1|1
+VERTICES
+-10.0f, -1.0f, 0.0f,  0.0f, 0.0f,
+ 10.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+ 0.0f,  1.0f, 0.0f,  0.5f, 1.0f
