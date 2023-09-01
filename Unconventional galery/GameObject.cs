@@ -31,6 +31,7 @@ namespace Unconventional_galery
     {
         public float[] _vertices { get; set; }
         
+        public string _debugKey {  get; set; }
 
         public GameObjectType _gameObjectType {get;set;}
 
@@ -65,11 +66,12 @@ namespace Unconventional_galery
             "Shaders/shader.frag"
         };
 
-       public  GameObject(Camera camera, float[] vertices ,GameObjectType gameObjectType, Vector3 worldSpaceCords, Vector3 worldSpaceRot, Vector3 scale, int textureOverride=-1,float[] indices = null, string[] shadersPath = null )
+       public  GameObject(Camera camera, float[] vertices ,string debugkey,GameObjectType gameObjectType, Vector3 worldSpaceCords, Vector3 worldSpaceRot, Vector3 scale, int textureOverride=-1,float[] indices = null, string[] shadersPath = null )
         {
             _camera = camera;
             _vertices = vertices;
             
+            _debugKey = debugkey;
             _gameObjectType = gameObjectType;
 
             _position= worldSpaceCords;
@@ -117,9 +119,9 @@ namespace Unconventional_galery
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            if(textureOverride<0&&gameObjectType==GameObjectType.NONE)    { throw new Exception("Unable to set texture. GameObjectType is NONE and textureOverride is not set or bellow zero!"); }
-            if(textureOverride> Directory.GetFiles("Resources").Length-1) { throw new Exception("textureOverride is higher then last texture ID!"); }
-
+            if(textureOverride<0&&gameObjectType==GameObjectType.NONE)    { throw new Exception($"DEBUGKEY:{_debugKey} - Unable to set texture. GameObjectType is NONE and textureOverride is not set or bellow zero!"); }
+            if(textureOverride> Directory.GetFiles("Resources").Length-1) { throw new Exception($"DEBUGKEY:{_debugKey} - textureOverride is higher then last texture ID!"); }
+            if(Convert.ToInt32 (gameObjectType) > Directory.GetFiles("Resources").Length - 1) { throw new Exception($"DEBUGKEY:{_debugKey} - non existing GameObjectType is set!"); }
 
             if (textureOverride == -1)
             {

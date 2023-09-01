@@ -23,22 +23,22 @@ namespace Unconventional_galery
             foreach (string data in raw) {
                 string[] head = data.Split("VERTICES")[0].Split("INDICES")[0].Split(",");
                 string[] vertData = data.Split("VERTICES")[1].Split(",");
-                string[] indicesData = null;
+                
                 
 
 
-                string[] wscRaw = head[1].Split(":")[1].Split("|");
-               OpenTK.Mathematics.Vector3 wsc =new OpenTK.Mathematics.Vector3(float.Parse(wscRaw[0]), float.Parse(wscRaw[1]), float.Parse(wscRaw[2]));
+                string[] wscRaw = head[2].Split(":")[1].Split("|");
+               OpenTK.Mathematics.Vector3 wsc =new OpenTK.Mathematics.Vector3(float.Parse(wscRaw[0].Replace("f",""), System.Globalization.NumberStyles.Any, ci), float.Parse(wscRaw[1].Replace("f",""), System.Globalization.NumberStyles.Any, ci), float.Parse(wscRaw[2].Replace("f",""), System.Globalization.NumberStyles.Any, ci));
 
-                string[] wsrRaw = head[2].Split(":")[1].Split("|");
-                OpenTK.Mathematics.Vector3 wsr = new OpenTK.Mathematics.Vector3(float.Parse(wsrRaw[0]), float.Parse(wsrRaw[1]), float.Parse(wsrRaw[2]));
+                string[] wsrRaw = head[3].Split(":")[1].Split("|");
+                OpenTK.Mathematics.Vector3 wsr = new OpenTK.Mathematics.Vector3(float.Parse(wsrRaw[0].Replace("f",""), System.Globalization.NumberStyles.Any, ci), float.Parse(wsrRaw[1].Replace("f",""), System.Globalization.NumberStyles.Any, ci), float.Parse(wsrRaw[2].Replace("f",""), System.Globalization.NumberStyles.Any, ci));
 
-                string[] scaleRaw= head[3].Split(":")[1].Split("|");
-                OpenTK.Mathematics.Vector3 scale = new OpenTK.Mathematics.Vector3(float.Parse(scaleRaw[0]), float.Parse(scaleRaw[1]), float.Parse(scaleRaw[2]));
+                string[] scaleRaw= head[4].Split(":")[1].Split("|");
+                OpenTK.Mathematics.Vector3 scale = new OpenTK.Mathematics.Vector3(float.Parse(scaleRaw[0].Replace("f",""), System.Globalization.NumberStyles.Any, ci), float.Parse(scaleRaw[1].Replace("f",""), System.Globalization.NumberStyles.Any, ci), float.Parse(scaleRaw[2].Replace("f",""), System.Globalization.NumberStyles.Any, ci));
 
                 int textureOverride = -1;
-                if (head.Length >= 5) {
-                     textureOverride =Convert.ToInt32( head[4].Split(":")[1]);
+                if (head.Length > 5) {
+                     textureOverride =Convert.ToInt32( head[5].Split(":")[1]);
                 }
 
                 
@@ -52,7 +52,7 @@ namespace Unconventional_galery
                 {
                     vertices[i] = float.Parse(vertData[i].Replace("f",""),System.Globalization.NumberStyles.Any,ci);
                 }
-                objects.Add(new GameObject(camera,vertices,(GameObjectType)Convert.ToInt32( head[0].Split(":")[1]),wsc,wsr,scale,textureOverride));
+                objects.Add(new GameObject(camera,vertices, head[0].Split(":")[1], (GameObjectType)Convert.ToInt32( head[1].Split(":")[1]),wsc,wsr,scale,textureOverride));
             }
 
             return objects;
