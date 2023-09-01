@@ -45,10 +45,12 @@ namespace Unconventional_galery
 
         private Texture _texture;
 
+
         private Camera _camera { get; set; }
 
         public Vector3 _position { get; set; }
         public Vector3 _rotation { get; set; }
+        public Vector3 _scale { get; set; }
 
         private float[] DefaultIndices =
         {
@@ -62,7 +64,7 @@ namespace Unconventional_galery
             "Shaders/shader.frag"
         };
 
-       public  GameObject(Camera camera, float[] vertices, GameObjectType gameObjectType, Vector3 worldSpaceCords, Vector3 worldSpaceRot, string[] shadersPath = null, int textureOverride=-1,float[] indices = null)
+       public  GameObject(Camera camera, float[] vertices, GameObjectType gameObjectType, Vector3 worldSpaceCords, Vector3 worldSpaceRot, Vector3 scale, string[] shadersPath = null, int textureOverride=-1,float[] indices = null)
         {
             _camera = camera;
             _vertices = vertices;
@@ -130,7 +132,11 @@ namespace Unconventional_galery
 
         public void Render()
         {
-            Matrix4 model =Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(_rotation.Z)) * Matrix4.CreateRotationY(MathHelper.DegreesToRadians(_rotation.Y))* Matrix4.CreateRotationX(MathHelper.DegreesToRadians(_rotation.X))* Matrix4.CreateTranslation(_position);
+            Matrix4 model =Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(_rotation.Z)) 
+                * Matrix4.CreateRotationY(MathHelper.DegreesToRadians(_rotation.Y))
+                * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(_rotation.X))
+                * Matrix4.CreateTranslation(_position)
+                * Matrix4.CreateScale(_scale);
             
             _shader.SetMatrix4("model", model); //worldspace
             _shader.SetMatrix4("view", _camera.GetViewMatrix());
