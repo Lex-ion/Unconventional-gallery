@@ -133,11 +133,12 @@ namespace Unconventional_galery
 
         public void Render()
         {
-            Matrix4 model =Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(_rotation.Z)) 
+            Matrix4 model = Matrix4.CreateScale(_scale)
+                * Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(_rotation.Z)) 
                 * Matrix4.CreateRotationY(MathHelper.DegreesToRadians(_rotation.Y))
                 * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(_rotation.X))
                 * Matrix4.CreateTranslation(_position)
-                * Matrix4.CreateScale(_scale);
+                ;
             
             _shader.SetMatrix4("model", model); //worldspace
             _shader.SetMatrix4("view", _camera.GetViewMatrix());
