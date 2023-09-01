@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>Unconventional_galery</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenTK" Version="4.8.0" />
+    <PackageReference Include="OpenTK.Core" Version="4.8.0" />
+    <PackageReference Include="OpenTK.Graphics" Version="4.8.0" />
+    <PackageReference Include="OpenTK.Mathematics" Version="4.8.0" />
+    <PackageReference Include="OpenTK.Windowing.Common" Version="4.8.0" />
+    <PackageReference Include="StbImageSharp" Version="2.27.13" />
+  </ItemGroup>
+
+</Project>
