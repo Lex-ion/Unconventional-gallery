@@ -72,6 +72,7 @@ namespace Unconventional_galery
 
             _position= worldSpaceCords;
             _rotation = worldSpaceRot;
+            _scale= scale;
             
 
             if (indices == null) {
