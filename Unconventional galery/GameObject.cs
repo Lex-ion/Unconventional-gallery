@@ -30,6 +30,7 @@ namespace Unconventional_galery
     internal class GameObject
     {
         public float[] _vertices { get; set; }
+        
 
         public GameObjectType _gameObjectType {get;set;}
 
@@ -64,10 +65,11 @@ namespace Unconventional_galery
             "Shaders/shader.frag"
         };
 
-       public  GameObject(Camera camera, float[] vertices, GameObjectType gameObjectType, Vector3 worldSpaceCords, Vector3 worldSpaceRot, Vector3 scale, string[] shadersPath = null, int textureOverride=-1,float[] indices = null)
+       public  GameObject(Camera camera, float[] vertices ,GameObjectType gameObjectType, Vector3 worldSpaceCords, Vector3 worldSpaceRot, Vector3 scale, string[] shadersPath = null, int textureOverride=-1,float[] indices = null)
         {
             _camera = camera;
             _vertices = vertices;
+            
             _gameObjectType = gameObjectType;
 
             _position= worldSpaceCords;
@@ -149,7 +151,7 @@ namespace Unconventional_galery
             _texture.Use(TextureUnit.Texture0);
             _shader.Use();
 
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, _vertices.Length/5);
         }
     }
 }

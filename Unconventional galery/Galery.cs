@@ -150,7 +150,7 @@ namespace Unconventional_galery
             CursorState = CursorState.Grabbed;
 
             _objects.Add(new GameObject(_camera, _vertices, GameObjectType.OBJECT_WALL, new Vector3(0, 2, 0), new Vector3(45, 45, 0),new Vector3(10,10,10)));
-
+            
             Stopwatch stopwatch = new Stopwatch();
             Stopwatch = stopwatch;
             Stopwatch.Start();
@@ -182,6 +182,7 @@ namespace Unconventional_galery
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
+            _objects[0]._scale = Vector3.One * (float)Math.Sin(_time);
             _objects[0].Render();
 
             SwapBuffers();
