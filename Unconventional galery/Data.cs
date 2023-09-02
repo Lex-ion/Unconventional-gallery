@@ -57,5 +57,57 @@ namespace Unconventional_galery
 
             return objects;
         }
+
+        public static void Editor(Camera camera)
+        {
+            Action action = () => {
+                Console.WriteLine(Process());
+
+                string Process()
+                {
+                    string Error()
+                    {
+                        return "error";
+                    }
+                    string output = "";
+
+
+                    int selection = 0;
+                    Console.WriteLine("Create [C]uboid or [P]lane?");
+                    switch (Console.ReadKey(true).KeyChar)
+                    {
+                        default:
+                            return Error();
+
+
+
+                        case 'c':
+                            selection = 1;
+                            break;
+
+                        case 'p':
+                            selection = 2;
+                            break;
+                    }
+
+                    Console.WriteLine("Set 2 or more vertexes. For adding fly to point and type to console add. When you are done press enter");
+                    List<OpenTK.Mathematics.Vector3> vertices = new List<OpenTK.Mathematics.Vector3>();
+                    while (Console.ReadLine().ToLower() == "add")
+                    {
+                        vertices.Add(camera.Position);
+                        Console.WriteLine($"Succesfully added {camera.Position}");
+                    }
+                    Console.WriteLine($"Adding finished with total {vertices.Count} vertices");
+
+                    return output;
+                }
+            };
+
+            Task task = new Task(action);
+               task.Start();
+                
+            
+            
+        }
     }
 }

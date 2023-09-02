@@ -295,6 +295,19 @@ namespace Unconventional_galery
                 _camera.Yaw += deltaX * sensitivity;
                 _camera.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top
             }
+
+
+            if (Console.KeyAvailable)
+            {
+                ReadConsoleInput();
+            }
+        }
+
+        void ReadConsoleInput()
+        {
+            string input = Console.ReadLine().ToLower();
+            if (input == "editor")
+                Data.Editor(_camera);
         }
 
         // In the mouse wheel function, we manage all the zooming of the camera.
