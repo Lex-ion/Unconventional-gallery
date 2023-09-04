@@ -17,9 +17,9 @@ using StbImageSharp;
 
 namespace Unconventional_galery
 {
-    internal class Galery: GameWindow
+    internal class Gallery: GameWindow
     {
-        public Galery(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
+        public Gallery(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
         }
 
@@ -184,15 +184,15 @@ namespace Unconventional_galery
             _shader.SetMatrix4("view", _camera.GetViewMatrix());
             _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
-
+            
 
             _texture.Use(TextureUnit.Texture0);
             _shader.Use();
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
-          //  _objects[0]._scale += Vector3.One * (float)Math.Sin(_time);
-
+            _objects[0]._scale += Vector3.One *0.0001f* (float)Math.Sin(_time/10);
+            _objects[0]._position += new Vector3(-1,0,0) * 0.0001f * (float)Math.Sin(_time / 10);
             foreach (GameObject obj in _objects)
             {
                 obj.Render();
@@ -308,6 +308,10 @@ namespace Unconventional_galery
             string input = Console.ReadLine().ToLower();
             if (input == "editor")
                 Data.Editor(_camera);
+            if (input == "reload")
+            {
+                _objects = Data.MapLoader(_camera);
+            }
         }
 
         // In the mouse wheel function, we manage all the zooming of the camera.

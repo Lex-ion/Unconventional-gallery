@@ -71,6 +71,11 @@ namespace Unconventional_galery
                     }
                     string output = "";
 
+                    OpenTK.Mathematics.Vector3 RoundVector(OpenTK.Mathematics.Vector3 vector3, int decimals)
+                    {
+                        return new OpenTK.Mathematics.Vector3((float)Math.Round(vector3.X, decimals,MidpointRounding.AwayFromZero), (float)Math.Round(vector3.Y, decimals, MidpointRounding.AwayFromZero), (float)Math.Round(vector3.Z,decimals, MidpointRounding.AwayFromZero));
+                    }
+
 
                     int selection = 0;
                     Console.WriteLine("Create [C]uboid or [P]lane?");
@@ -90,14 +95,104 @@ namespace Unconventional_galery
                             break;
                     }
 
+                    Console.WriteLine("Set rounding");
+
+                    int decimals = int.Parse(Console.ReadLine());
+
+
+
                     Console.WriteLine("Set 2 or more vertexes. For adding fly to point and type to console add. When you are done press enter");
                     List<OpenTK.Mathematics.Vector3> vertices = new List<OpenTK.Mathematics.Vector3>();
-                    while (Console.ReadLine().ToLower() == "add")
+
+                    Console.Write("Current position: ");
+                    int[] cursorPos = { Console.CursorLeft, Console.CursorTop };
+                    OpenTK.Mathematics.Vector3 lastDisplayedVector = new OpenTK.Mathematics.Vector3();
+
+                    while (true)
                     {
-                        vertices.Add(camera.Position);
-                        Console.WriteLine($"Succesfully added {camera.Position}");
+                        int[] lastPos = { Console.CursorLeft, Console.CursorTop };
+
+                       
+
+                        if (lastDisplayedVector != RoundVector(camera.Position, decimals))
+                        {
+                            lastDisplayedVector = RoundVector(camera.Position, decimals);
+                            Console.SetCursorPosition(cursorPos[0], cursorPos[1]);
+                            Console.Write(new string(' ', Console.WindowWidth));
+                            Console.SetCursorPosition(cursorPos[0], cursorPos[1]);
+                            Console.Write(RoundVector(camera.Position, decimals));
+                            Console.SetCursorPosition(lastPos[0], lastPos[1]);
+                        }
+                        
+
+                        if (Console.KeyAvailable)
+                        {
+                            if (Console.ReadLine().ToLower() == "add")
+                            {
+                                vertices.Add(RoundVector(camera.Position, decimals));
+                                Console.WriteLine($"Succesfully added {vertices.Last()}");
+                            }
+                            else break;
+                           
+                        }
+                        
                     }
                     Console.WriteLine($"Adding finished with total {vertices.Count} vertices");
+
+                    List<float> vertexData = new List<float>();
+                    void addToList(OpenTK.Mathematics.Vector3 vector3, float textureX, float textureY)
+                    {
+                        vertexData.Add(vector3.X);
+                        vertexData.Add(vector3.Y);
+                        vertexData.Add(vector3.Z);
+
+                        vertexData.Add(textureX);
+                        vertexData.Add(textureY);
+                    }
+
+                    if (vertices.Count == 2)
+                    {
+                        if (selection == 1)
+                        {
+
+                        }else if (selection == 2)
+                        {
+                            float length = Math.Abs(vertices[0].X - vertices[1].X)/2;
+                            float height = Math.Abs(vertices[0].Y - vertices[1].Y)/2;
+                            float width = Math.Abs(vertices[0].Z - vertices[1].Z);
+
+                            float[] sample =
+                            {
+                                -1f, -1f, -1f,  0.0f, 0.0f,
+                                 1f, -1f, -1f,  1.0f, 0.0f,
+                                 1f,  1f, -1f,  1.0f, 1.0f,
+                                 1f,  1f, -1f,  1.0f, 1.0f,
+                                -1f,  1f, -1f,  0.0f, 1.0f,
+                                -1f, -1f, -1f,  0.0f, 0.0f
+                            };
+                           
+                            
+
+
+                            int index=0;
+                            while (index < sample.Length)
+                            {
+                                sample[index]*=length;
+                                sample[index+1]*=height;
+                                sample[index + 2] *= width;
+                                index += 5;
+                            }
+
+                            foreach (float f in sample)
+                                vertexData.Add(f);
+
+
+                        }
+                    }
+
+                    foreach (float f in vertexData)
+                        Console.Write(f + "f,");
+                    Console.WriteLine();
 
                     return output;
                 }
