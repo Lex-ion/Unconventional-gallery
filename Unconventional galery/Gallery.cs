@@ -302,6 +302,8 @@ namespace Unconventional_galery
             }
 
 
+
+            //was broken because on top is if statment that requires to be focused on game or it will return d
           //  if (Console.KeyAvailable)
           //  {
           //      Action action = ()=>{ 

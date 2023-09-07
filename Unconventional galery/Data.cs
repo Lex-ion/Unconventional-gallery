@@ -58,13 +58,11 @@ namespace Unconventional_galery
             return objects;
         }
 
-        public static void Editor(Camera camera)
+        public static string Editor(Camera camera)
         {
-            Action action = () => {
-                Console.WriteLine(Process());
+            
 
-                string Process()
-                {
+                
                     string Error()
                     {
                         return "error";
@@ -250,11 +248,8 @@ namespace Unconventional_galery
                     Console.WriteLine();
 
                     return output;
-                }
-            };
-
-            Task task = new Task(action);
-               task.Start();
+                
+            
                 
             
             
