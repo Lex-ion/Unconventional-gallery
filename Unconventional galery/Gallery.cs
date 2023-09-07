@@ -111,6 +111,8 @@ namespace Unconventional_galery
 
         List<GameObject> _objects = new List<GameObject>();
 
+        Task Task;
+
         protected override void OnLoad()
         {
             base.OnLoad();
@@ -158,6 +160,9 @@ namespace Unconventional_galery
             // We make the mouse cursor invisible and captured so we can have proper FPS-camera movement.
             CursorState = CursorState.Grabbed;
 
+
+            Action readAction = () => { ReadConsoleInput(); };
+            Task.Run(readAction);
 
             _objects = Data.MapLoader(_camera);
             Stopwatch stopwatch = new Stopwatch();
@@ -297,20 +302,34 @@ namespace Unconventional_galery
             }
 
 
-            if (Console.KeyAvailable)
-            {
-                ReadConsoleInput();
-            }
+          //  if (Console.KeyAvailable)
+          //  {
+          //      Action action = ()=>{ 
+          //              ReadConsoleInput();
+          //          };
+          //      
+          //      if (Task.Status != TaskStatus.Running)
+          //      {
+          //          Task.Run(action);
+          //      }
+          //      
+          //  }
+        
         }
+
+        
 
         void ReadConsoleInput()
         {
-            string input = Console.ReadLine().ToLower();
-            if (input == "editor")
-                Data.Editor(_camera);
-            if (input == "reload")
+            while (true)
             {
-                _objects = Data.MapLoader(_camera);
+               
+                    string input = Console.ReadLine().ToLower();
+                    if (input == "editor")
+                        Data.Editor(_camera);
+                    if (input == "reload")
+                        _objects = Data.MapLoader(_camera);
+                
             }
         }
 
