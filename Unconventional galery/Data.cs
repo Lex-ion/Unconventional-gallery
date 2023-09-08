@@ -75,36 +75,77 @@ namespace Unconventional_galery
                     }
 
 
-                    int selection = 0;
-                    Console.WriteLine("Create [C]uboid or [P]lane?");
-                    switch (Console.ReadKey(true).KeyChar)
-                    {
-                        default:
-                            return Error();
+            Console.WriteLine("Enter debug key:");
+            string debugKey = Console.ReadLine();
+
+
+            string inputFromConsole;
+
+            int gameObjectType;
+            do
+            {
+                Console.WriteLine("Enter valid gameObjectType");
+                inputFromConsole = Console.ReadLine();
+            } while (!int.TryParse(inputFromConsole, out gameObjectType)||!Enum.IsDefined(typeof(GameObjectType),gameObjectType)) ;
+
+            int gameObjectTypeOverride;
+            Console.WriteLine("Do you wish to override? [Y]es anything else is no");
+            if(gameObjectType==-1)
+            { Console.WriteLine("Override is needed"); }
+            if (gameObjectType==-1||Console.ReadKey(true).KeyChar == 'y')
+            {
+                do
+                {
+                    Console.WriteLine("Enter valid gameObjectType for override");
+                    inputFromConsole = Console.ReadLine();
+                } while (!int.TryParse(inputFromConsole, out gameObjectTypeOverride) || !Enum.IsDefined(typeof(GameObjectType), gameObjectTypeOverride)|| gameObjectTypeOverride==-1);
+            }
+
+
+            int selection = 0;
+            bool selecting = true;
+            Console.WriteLine("Create [C]uboid or [P]lane?");
+            do
+            {
+              
+                switch (Console.ReadKey(true).KeyChar)
+                {
+                    case 'c':
+                        selection = 1;
+                        selecting = false;
+                        Console.WriteLine("Selected cuboid");
+                        break;
+
+                    case 'p':
+                        selection = 2;
+                        selecting = false;
+                        Console.WriteLine("Selected plane");
+                        break;
+                }
+
+
+            } while (selecting);
+                
+
+                    
+
+            int decimals;
+            do
+            {
+                Console.WriteLine("Set rounding (0 - 15)");
+                inputFromConsole = Console.ReadLine();
+            } while (!int.TryParse(inputFromConsole,out decimals)||decimals<0||decimals>15);
 
 
 
-                        case 'c':
-                            selection = 1;
-                            break;
-
-                        case 'p':
-                            selection = 2;
-                            break;
-                    }
-
-                    Console.WriteLine("Set rounding");
-
-                    int decimals = int.Parse(Console.ReadLine());
-
-
-
-                    Console.WriteLine("Set 2 or more vertexes. For adding fly to point and type to console add. When you are done press enter");
-                    List<OpenTK.Mathematics.Vector3> vertices = new List<OpenTK.Mathematics.Vector3>();
+                     Console.WriteLine("Set 2 or more vertexes. For adding fly to point and type to console add. When you are done press enter");
+            
+                    List < OpenTK.Mathematics.Vector3 > vertices = new List<OpenTK.Mathematics.Vector3>();
 
                     Console.Write("Current position: ");
                     int[] cursorPos = { Console.CursorLeft, Console.CursorTop };
                     OpenTK.Mathematics.Vector3 lastDisplayedVector = new OpenTK.Mathematics.Vector3();
+                    OpenTK.Mathematics.Vector3 midPoint = new OpenTK.Mathematics.Vector3();
 
                     while (true)
                     {
@@ -153,7 +194,7 @@ namespace Unconventional_galery
 
                         float length = Math.Abs(vertices[0].X - vertices[1].X) / 2;
                         float height = Math.Abs(vertices[0].Y - vertices[1].Y) / 2;
-                        float width = Math.Abs(vertices[0].Z - vertices[1].Z / 2);
+                float width = 1;//Math.Abs(vertices[0].Z - vertices[1].Z / 2);
 
                         float[] sample;
 
@@ -225,9 +266,12 @@ namespace Unconventional_galery
                         }
 
 
+                midPoint.X = (vertices[0].X + vertices[1].X) / 2;
+                midPoint.Y = (vertices[0].Y + vertices[1].Y) / 2;
+                midPoint.Z = (vertices[0].Z + vertices[1].Z) / 2;
+                Console.WriteLine($"WSC:{midPoint.X.ToString().Replace(",", ".")}|{midPoint.Y.ToString().Replace(",", ".")}|{midPoint.Z.ToString().Replace(",",".")}");
 
-
-                        int index = 0;
+                int index = 0;
                         while (index < sample.Length)
                         {
                             sample[index] *= length;

@@ -113,6 +113,8 @@ namespace Unconventional_galery
 
         Task Task;
 
+        bool reloadingObjects = false;
+
         protected override void OnLoad()
         {
             base.OnLoad();
@@ -210,6 +212,11 @@ namespace Unconventional_galery
         {
             base.OnUpdateFrame(e);
 
+            if (reloadingObjects)
+            {
+                reloadingObjects = false;
+                _objects = Data.MapLoader(_camera);
+            }
 
             if (!IsFocused) // Check to see if the window is focused
             {
@@ -329,8 +336,9 @@ namespace Unconventional_galery
                     string input = Console.ReadLine().ToLower();
                     if (input == "editor")
                         Data.Editor(_camera);
-                    if (input == "reload")
-                        _objects = Data.MapLoader(_camera);
+                if (input == "reload")
+                    reloadingObjects = true;
+                        
                 
             }
         }
