@@ -12,6 +12,9 @@ namespace Unconventional_galery
 {
     internal class Data
     {
+
+        public static List<GameObject> objectPoints = new List<GameObject>();
+
         public static List<GameObject> MapLoader(Camera camera)
         {
             CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
@@ -141,13 +144,63 @@ namespace Unconventional_galery
                      Console.WriteLine("Set 2 or more vertexes. For adding fly to point and type to console add. When you are done press enter");
             
                     List < OpenTK.Mathematics.Vector3 > vertices = new List<OpenTK.Mathematics.Vector3>();
+                   
+
 
                     Console.Write("Current position: ");
                     int[] cursorPos = { Console.CursorLeft, Console.CursorTop };
                     OpenTK.Mathematics.Vector3 lastDisplayedVector = new OpenTK.Mathematics.Vector3();
                     OpenTK.Mathematics.Vector3 midPoint = new OpenTK.Mathematics.Vector3();
+            float[] cube = new float[]
+                 {
+                                //back
+                                -1.0f, -1.0f, -1.0f,  1.0f, 0.0f,
+                                 1.0f, -1.0f, -1.0f,  0.0f, 0.0f,
+                                 1.0f,  1.0f, -1.0f,  0.0f, 1.0f,
+                                 1.0f,  1.0f, -1.0f,  0.0f, 1.0f,
+                                -1.0f,  1.0f, -1.0f,  1.0f, 1.0f,
+                                -1.0f, -1.0f, -1.0f,  1.0f, 0.0f,
 
-                    while (true)
+                                //front
+                                -1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
+                                 1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
+                                 1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
+                                 1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
+                                -1.0f,  1.0f,  1.0f,  0.0f, 1.0f,
+                                -1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
+
+                                //left
+                                -1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
+                                -1.0f,  1.0f, -1.0f,  0.0f, 1.0f,
+                                -1.0f, -1.0f, -1.0f,  0.0f, 0.0f,
+                                -1.0f, -1.0f, -1.0f,  0.0f, 0.0f,
+                                -1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
+                                -1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
+
+                                //right
+                                 1.0f,  1.0f,  1.0f,  0.0f, 1.0f,
+                                 1.0f,  1.0f, -1.0f,  1.0f, 1.0f,
+                                 1.0f, -1.0f, -1.0f,  1.0f, 0.0f,
+                                 1.0f, -1.0f, -1.0f,  1.0f, 0.0f,
+                                 1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
+                                 1.0f,  1.0f,  1.0f,  0.0f, 1.0f,
+
+                                 //bottom
+                                -1.0f, -1.0f, -1.0f,  1.0f, 1.0f,
+                                 1.0f, -1.0f, -1.0f,  0.0f, 1.0f,
+                                 1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
+                                 1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
+                                -1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
+                                -1.0f, -1.0f, -1.0f,  1.0f, 1.0f,
+
+                                //top
+                                -1.0f,  1.0f, -1.0f,  0.0f, 1.0f,
+                                 1.0f,  1.0f, -1.0f,  1.0f, 1.0f,
+                                 1.0f,  1.0f,  1.0f,  1.0f, 0.0f,
+                                 1.0f,  1.0f,  1.0f,  1.0f, 0.0f,
+                                -1.0f,  1.0f,  1.0f,  0.0f, 0.0f,
+                                -1.0f,  1.0f, -1.0f,  0.0f, 1.0f };
+            while (true)
                     {
                         int[] lastPos = { Console.CursorLeft, Console.CursorTop };
 
@@ -162,13 +215,18 @@ namespace Unconventional_galery
                             Console.Write(RoundVector(camera.Position, decimals));
                             Console.SetCursorPosition(lastPos[0], lastPos[1]);
                         }
-                        
+
+                       
+                
 
                         if (Console.KeyAvailable)
                         {
                             if (Console.ReadLine().ToLower() == "add")
                             {
                                 vertices.Add(RoundVector(camera.Position, decimals));
+
+                        objectPoints.Add(new GameObject(camera, cube, "point", 0, vertices.Last(), new OpenTK.Mathematics.Vector3(45, 45, 45), new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f)));
+
                                 Console.WriteLine($"Succesfully added {vertices.Last()}");
                             }
                             else break;

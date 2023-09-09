@@ -205,6 +205,11 @@ namespace Unconventional_galery
                 obj.Render();
             }
 
+            foreach (GameObject point in Data.objectPoints)
+            {
+                point.Render();
+            }
+
             SwapBuffers();
         }
 
@@ -334,14 +339,33 @@ namespace Unconventional_galery
             {
                
                     string input = Console.ReadLine().ToLower();
-                    if (input == "editor")
-                        Data.Editor(_camera);
-                if (input == "reload")
+                if (input == "editor")
+                    Data.Editor(_camera);
+                else if (input == "reload")
                     reloadingObjects = true;
-                        
+                else if (input == "teleport")
+                    Teleport();
                 
             }
         }
+
+        void Teleport()
+        {
+            string[] nums= new string[3];
+            OpenTK.Mathematics.Vector3 pos = new OpenTK.Mathematics.Vector3();
+            do
+            {
+                Console.WriteLine("Write coordinates to teleport. Format: X,xf|Y,yf|Z,zf");
+                nums = Console.ReadLine().Replace(";","|").Split("|");
+                foreach (string num in nums)
+                {
+                    num.Replace("f", "").Replace(".",",");
+                }
+
+            } while (!float.TryParse(nums[0], out pos.X)|| !float.TryParse(nums[1], out pos.Y)|| !float.TryParse(nums[2], out pos.Z));
+            _camera.Position = pos;
+        }
+
 
         // In the mouse wheel function, we manage all the zooming of the camera.
         // This is simply done by changing the FOV of the camera.
