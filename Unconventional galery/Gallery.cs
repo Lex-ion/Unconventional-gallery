@@ -110,10 +110,14 @@ namespace Unconventional_galery
         int index = 0;
 
         List<GameObject> _objects = new List<GameObject>();
+        public List<GameObject> _objectPoints = new List<GameObject>();
 
         Task Task;
 
         bool reloadingObjects = false;
+
+        public List<object> dataBridge = new List<object>();
+        public bool addObjectPoint = false;
 
         protected override void OnLoad()
         {
@@ -205,10 +209,13 @@ namespace Unconventional_galery
                 obj.Render();
             }
 
-            foreach (GameObject point in Data.objectPoints)
+            foreach (GameObject point in _objectPoints)
             {
                 point.Render();
+                point._rotation += new Vector3((float)Math.Sin(-_time/10), 0, (float)Math.Sin(_time / 7)) * 0.01f * (float)Math.Sin(_time/10);
             }
+
+            
 
             SwapBuffers();
         }
@@ -221,6 +228,15 @@ namespace Unconventional_galery
             {
                 reloadingObjects = false;
                 _objects = Data.MapLoader(_camera);
+            }
+
+            if (addObjectPoint)
+            {
+                addObjectPoint = false;
+            
+
+                _objectPoints.Add(new GameObject(_camera, (float[])dataBridge[0], "objectPoint", GameObjectType.OBJECT_TEMPORARY, (OpenTK.Mathematics.Vector3)dataBridge[1], new OpenTK.Mathematics.Vector3(45, 0, 45), new OpenTK.Mathematics.Vector3(0.05f, 0.05f, 0.05f)));
+                dataBridge.Clear();
             }
 
             if (!IsFocused) // Check to see if the window is focused
@@ -340,7 +356,7 @@ namespace Unconventional_galery
                
                     string input = Console.ReadLine().ToLower();
                 if (input == "editor")
-                    Data.Editor(_camera);
+                    Data.Editor(_camera,this);
                 else if (input == "reload")
                     reloadingObjects = true;
                 else if (input == "teleport")

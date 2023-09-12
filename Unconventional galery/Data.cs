@@ -13,7 +13,7 @@ namespace Unconventional_galery
     internal class Data
     {
 
-        public static List<GameObject> objectPoints = new List<GameObject>();
+       
 
         public static List<GameObject> MapLoader(Camera camera)
         {
@@ -61,7 +61,7 @@ namespace Unconventional_galery
             return objects;
         }
 
-        public static string Editor(Camera camera)
+        public static string Editor(Camera camera,Gallery gallery)
         {
             
 
@@ -221,14 +221,26 @@ namespace Unconventional_galery
 
                         if (Console.KeyAvailable)
                         {
-                            if (Console.ReadLine().ToLower() == "add")
+                    string input = Console.ReadLine().ToLower();
+
+
+                            if ( input== "add")
                             {
                                 vertices.Add(RoundVector(camera.Position, decimals));
 
-                        objectPoints.Add(new GameObject(camera, cube, "point", 0, vertices.Last(), new OpenTK.Mathematics.Vector3(45, 45, 45), new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f)));
+                        //objectPoints.Add(new GameObject(camera, cube, "point", 0, vertices.Last(), new OpenTK.Mathematics.Vector3(45, 45, 45), new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f)));
 
+                        gallery.dataBridge.Add(cube);
+                        gallery.dataBridge.Add(vertices.Last());
+                        gallery.addObjectPoint = true;
                                 Console.WriteLine($"Succesfully added {vertices.Last()}");
-                            }
+                            }else if(input=="remove")
+                    {
+                        Console.WriteLine($"Removed {vertices.Last()}");
+                        vertices.Remove(vertices.Last());
+                        gallery._objectPoints.Remove(gallery._objectPoints.Last());
+
+                    }
                             else break;
                            
                         }
