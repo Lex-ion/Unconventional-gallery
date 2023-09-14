@@ -343,7 +343,7 @@ namespace Unconventional_galery
 
         void ReadDataBridge()
         {
-            if ((int)Data.dataBridge.Last() == (int)DataBridgeUsage.ADD_POINT_DATA)
+            if ((DataBridgeUsage)Data.dataBridge.Last() == DataBridgeUsage.ADD_POINT_DATA)
             {
                 _objectPoints.Add(new GameObject(_camera, (float[])Data.dataBridge[0], "objectPoint", GameObjectType.OBJECT_TEMPORARY, (OpenTK.Mathematics.Vector3)Data.dataBridge[1], new OpenTK.Mathematics.Vector3(45, 0, 45), new OpenTK.Mathematics.Vector3(0.05f, 0.05f, 0.05f)));
                 Data.dataBridge.Clear();
