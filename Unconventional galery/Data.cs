@@ -271,7 +271,7 @@ namespace Unconventional_galery
 
                         float length = Math.Abs(vertices[0].X - vertices[1].X) / 2;
                         float height = Math.Abs(vertices[0].Y - vertices[1].Y) / 2;
-                float width = Math.Abs(vertices[0].Z - vertices[1].Z / 2);
+                        float width  = Math.Abs(vertices[0].Z - vertices[1].Z) / 2;
 
                         float[] sample;
 
