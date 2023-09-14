@@ -364,7 +364,11 @@ namespace Unconventional_galery
                
                     string input = Console.ReadLine().ToLower();
                 if (input == "editor")
-                    Data.Editor(_camera,this);
+                    foreach(string line in Data.Editor(_camera,this))
+                        Console.WriteLine(line);
+
+
+
                 else if (input == "reload")
                     reloadingObjects = true;
                 else if (input == "teleport")
