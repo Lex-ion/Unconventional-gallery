@@ -230,7 +230,7 @@ namespace Unconventional_galery
                 _objects = Data.MapLoader(_camera);
             }
 
-            if (Data.dataBridge.Count > 0)
+            if (Data.dataBridgeReady)
                 ReadDataBridge();
 
             if (!IsFocused) // Check to see if the window is focused
@@ -343,11 +343,14 @@ namespace Unconventional_galery
 
         void ReadDataBridge()
         {
-            if ((DataBridgeUsage)Data.dataBridge.Last() == DataBridgeUsage.ADD_POINT_DATA)
-            {
-                _objectPoints.Add(new GameObject(_camera, (float[])Data.dataBridge[0], "objectPoint", GameObjectType.OBJECT_TEMPORARY, (OpenTK.Mathematics.Vector3)Data.dataBridge[1], new OpenTK.Mathematics.Vector3(45, 0, 45), new OpenTK.Mathematics.Vector3(0.05f, 0.05f, 0.05f)));
-                Data.dataBridge.Clear();
-            }
+            Data.dataBridgeReady = false;
+
+            
+           if ((DataBridgeUsage)Data.dataBridge.Last() == DataBridgeUsage.ADD_POINT_DATA)
+           {
+               _objectPoints.Add(new GameObject(_camera, (float[])Data.dataBridge[0], "objectPoint", GameObjectType.OBJECT_TEMPORARY, (OpenTK.Mathematics.Vector3)Data.dataBridge[1], new OpenTK.Mathematics.Vector3(45, 0, 45), new OpenTK.Mathematics.Vector3(0.05f, 0.05f, 0.05f)));
+               Data.dataBridge.Clear();
+           }
 
             Data.dataBridge.Clear(); //just in case i forgot
         }

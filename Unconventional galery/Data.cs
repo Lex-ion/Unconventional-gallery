@@ -19,6 +19,7 @@ namespace Unconventional_galery
     {
 
         public static List<object> dataBridge = new List<object>();
+        public static bool dataBridgeReady = false;
 
         public static List<GameObject> MapLoader(Camera camera)
         {
@@ -238,7 +239,8 @@ namespace Unconventional_galery
                         dataBridge.Add(cube);
                         dataBridge.Add(vertices.Last());
                         dataBridge.Add(DataBridgeUsage.ADD_POINT_DATA);
-                                Console.WriteLine($"Succesfully added {vertices.Last()}");
+                        dataBridgeReady = true;
+                        Console.WriteLine($"Succesfully added {vertices.Last()}");
                             }else if(input=="remove")
                     {
                         Console.WriteLine($"Removed {vertices.Last()}");
