@@ -10,10 +10,15 @@ using OpenTK.Mathematics;
 
 namespace Unconventional_galery
 {
+    enum DataBridgeUsage
+    {
+        ADD_POINT_DATA=1,
+    }
+
     internal class Data
     {
 
-       
+        public static List<object> dataBridge = new List<object>();
 
         public static List<GameObject> MapLoader(Camera camera)
         {
@@ -230,9 +235,9 @@ namespace Unconventional_galery
 
                         //objectPoints.Add(new GameObject(camera, cube, "point", 0, vertices.Last(), new OpenTK.Mathematics.Vector3(45, 45, 45), new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f)));
 
-                        gallery.dataBridge.Add(cube);
-                        gallery.dataBridge.Add(vertices.Last());
-                        gallery.addObjectPoint = true;
+                        dataBridge.Add(cube);
+                        dataBridge.Add(vertices.Last());
+                        dataBridge.Add(DataBridgeUsage.ADD_POINT_DATA);
                                 Console.WriteLine($"Succesfully added {vertices.Last()}");
                             }else if(input=="remove")
                     {
