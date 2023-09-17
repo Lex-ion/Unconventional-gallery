@@ -13,13 +13,23 @@ namespace Unconventional_galery
     enum DataBridgeUsage
     {
         ADD_POINT_DATA = 1,
+        EDITOR_PREVIEW = 2,
+        EDITOR_CLEAR= 3,
+    }
+
+    internal class DataBridge
+    {
+        public static List<object> Data = new List<object>();
+        public static bool IsReady = false;
+
+        public (int, double) ti = (5, 4.89);
+
     }
 
     internal class Data
     {
 
-        public static List<object> dataBridge = new List<object>();
-        public static bool dataBridgeReady = false;
+       
 
         public static List<GameObject> MapLoader(Camera camera)
         {
@@ -33,8 +43,6 @@ namespace Unconventional_galery
             {
                 string[] head = data.Split("VERTICES")[0].Split("INDICES")[0].Split(",");
                 string[] vertData = data.Split("VERTICES")[1].Split(",");
-
-
 
 
                 string[] wscRaw = head[2].Split(":")[1].Split("|");
@@ -161,6 +169,9 @@ namespace Unconventional_galery
             int[] cursorPos = { Console.CursorLeft, Console.CursorTop };
             OpenTK.Mathematics.Vector3 lastDisplayedVector = new OpenTK.Mathematics.Vector3();
             OpenTK.Mathematics.Vector3 midPoint = new OpenTK.Mathematics.Vector3();
+            float[] sample = { };
+
+
             float[] cube = new float[]
                  {
                                 //back
@@ -240,10 +251,10 @@ namespace Unconventional_galery
 
                         //objectPoints.Add(new GameObject(camera, cube, "point", 0, vertices.Last(), new OpenTK.Mathematics.Vector3(45, 45, 45), new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f)));
 
-                        dataBridge.Add(cube);
-                        dataBridge.Add(vertices.Last());
-                        dataBridge.Add(DataBridgeUsage.ADD_POINT_DATA);
-                        dataBridgeReady = true;
+                        DataBridge.Data.Add(cube);
+                        DataBridge.Data.Add(vertices.Last());
+                        DataBridge.Data.Add(DataBridgeUsage.ADD_POINT_DATA);
+                        DataBridge.IsReady = true;
                         Console.WriteLine($"Succesfully added {vertices.Last()}");
                     }
                     else if (input == "remove")
@@ -253,6 +264,30 @@ namespace Unconventional_galery
                         gallery._objectPoints.Remove(gallery._objectPoints.Last());
 
                     }
+                    else if(input=="preview")
+                    {
+                        if (vertices.Count < 2)
+                        {
+                            Console.WriteLine("not enough vertices");
+                            continue;
+                        }
+
+
+                        GenerateData();
+                        DataBridge.Data.Add(sample);
+                        DataBridge.Data.Add(gameObjectType);
+                        DataBridge.Data.Add(midPoint);
+                        DataBridge.Data.Add(gameObjectTypeOverride);
+                        DataBridge.Data.Add(DataBridgeUsage.EDITOR_PREVIEW);
+                        DataBridge.IsReady = true;
+                    }
+                    else if (input == "clear")
+                    {
+                        DataBridge.Data.Add(DataBridgeUsage.EDITOR_CLEAR);
+                        DataBridge.IsReady = true;
+
+                    }
+
                     else break;
 
                 }
@@ -271,18 +306,19 @@ namespace Unconventional_galery
                 vertexData.Add(textureY);
             }
 
-            if (vertices.Count == 2)
+            
+
+            
+
+
+            void GenerateData()
             {
-
-                float length = Math.Abs(vertices[0].X - vertices[1].X) / 2;
-                float height = Math.Abs(vertices[0].Y - vertices[1].Y) / 2;
-                float width = Math.Abs(vertices[0].Z - vertices[1].Z) / 2;
-
-                float[] sample;
-
-                if (selection == 2)
+                if (vertices.Count == 2)
                 {
-                    sample = new float[]{
+
+                    if (selection == 2)
+                    {
+                        sample = new float[]{
                                 -1f, -1f, -1f,  0.0f, 0.0f,
                                  1f, -1f, 1f,  1.0f, 0.0f,
                                  1f,  1f, 1f,  1.0f, 1.0f,
@@ -290,83 +326,43 @@ namespace Unconventional_galery
                                 -1f,  1f, -1f,  0.0f, 1.0f,
                                 -1f, -1f, -1f,  0.0f, 0.0f
                             };
-                }
-                else
-                {
-                    sample = new float[]
+                    }
+                    else
                     {
-                                //back
-                                -1.0f, -1.0f, -1.0f,  1.0f, 0.0f,
-                                 1.0f, -1.0f, -1.0f,  0.0f, 0.0f,
-                                 1.0f,  1.0f, -1.0f,  0.0f, 1.0f,
-                                 1.0f,  1.0f, -1.0f,  0.0f, 1.0f,
-                                -1.0f,  1.0f, -1.0f,  1.0f, 1.0f,
-                                -1.0f, -1.0f, -1.0f,  1.0f, 0.0f,
+                        sample = cube;
+                    }
 
-                                //front
-                                -1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
-                                 1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
-                                 1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
-                                 1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
-                                -1.0f,  1.0f,  1.0f,  0.0f, 1.0f,
-                                -1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
 
-                                //left
-                                -1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
-                                -1.0f,  1.0f, -1.0f,  0.0f, 1.0f,
-                                -1.0f, -1.0f, -1.0f,  0.0f, 0.0f,
-                                -1.0f, -1.0f, -1.0f,  0.0f, 0.0f,
-                                -1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
-                                -1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
 
-                                //right
-                                 1.0f,  1.0f,  1.0f,  0.0f, 1.0f,
-                                 1.0f,  1.0f, -1.0f,  1.0f, 1.0f,
-                                 1.0f, -1.0f, -1.0f,  1.0f, 0.0f,
-                                 1.0f, -1.0f, -1.0f,  1.0f, 0.0f,
-                                 1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
-                                 1.0f,  1.0f,  1.0f,  0.0f, 1.0f,
+                    float length = Math.Abs(vertices[0].X - vertices[1].X) / 2;
+                    float height = Math.Abs(vertices[0].Y - vertices[1].Y) / 2;
+                    float width = Math.Abs(vertices[0].Z - vertices[1].Z) / 2;
 
-                                 //bottom
-                                -1.0f, -1.0f, -1.0f,  1.0f, 1.0f,
-                                 1.0f, -1.0f, -1.0f,  0.0f, 1.0f,
-                                 1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
-                                 1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
-                                -1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
-                                -1.0f, -1.0f, -1.0f,  1.0f, 1.0f,
+                    
 
-                                //top
-                                -1.0f,  1.0f, -1.0f,  0.0f, 1.0f,
-                                 1.0f,  1.0f, -1.0f,  1.0f, 1.0f,
-                                 1.0f,  1.0f,  1.0f,  1.0f, 0.0f,
-                                 1.0f,  1.0f,  1.0f,  1.0f, 0.0f,
-                                -1.0f,  1.0f,  1.0f,  0.0f, 0.0f,
-                                -1.0f,  1.0f, -1.0f,  0.0f, 1.0f
 
-                    };
+                    midPoint.X = (vertices[0].X + vertices[1].X) / 2;
+                    midPoint.Y = (vertices[0].Y + vertices[1].Y) / 2;
+                    midPoint.Z = (vertices[0].Z + vertices[1].Z) / 2;
+
+
+                    int index = 0;
+                    while (index < sample.Length)
+                    {
+                        sample[index] *= length;
+                        sample[index + 1] *= height;
+                        sample[index + 2] *= width;
+                        index += 5;
+                    }
 
                 }
-
-
-                midPoint.X = (vertices[0].X + vertices[1].X) / 2;
-                midPoint.Y = (vertices[0].Y + vertices[1].Y) / 2;
-                midPoint.Z = (vertices[0].Z + vertices[1].Z) / 2;
-                
-
-                int index = 0;
-                while (index < sample.Length)
-                {
-                    sample[index] *= length;
-                    sample[index + 1] *= height;
-                    sample[index + 2] *= width;
-                    index += 5;
-                }
-
-                foreach (float f in sample)
-                    vertexData.Add(f);
             }
 
 
+
+
+            foreach (float f in sample)
+                vertexData.Add(f);
 
 
 
