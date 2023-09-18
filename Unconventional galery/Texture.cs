@@ -14,9 +14,16 @@ namespace Unconventional_galery
     internal class Texture
     {
         public readonly int Handle;
+        public readonly GameObjectType GameObjectType;
 
-        public static Texture LoadFromFile(string path)
+        public static Texture LoadFromFile(string path, GameObjectType gameObjectType)
         {
+            if (Data.Textures.Any(t => t.GameObjectType == gameObjectType&&t.GameObjectType!=GameObjectType.NONE))
+            { 
+                return Data.Textures[Data.Textures.FindIndex(t => t.GameObjectType == gameObjectType)];
+            }
+            
+
             // Generate handle
             int handle = GL.GenTexture();
 
@@ -73,12 +80,16 @@ namespace Unconventional_galery
             // Here is an example of mips in action https://en.wikipedia.org/wiki/File:Mipmap_Aliasing_Comparison.png
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-            return new Texture(handle);
+
+            Data.Textures.Add(new Texture(handle, gameObjectType));
+
+            return Data.Textures.Last();
         }
 
-        public Texture(int glHandle)
+        public Texture(int glHandle, GameObjectType gameObjectType)
         {
             Handle = glHandle;
+            GameObjectType = gameObjectType;
         }
 
         // Activate texture

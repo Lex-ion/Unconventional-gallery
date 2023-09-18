@@ -156,7 +156,7 @@ namespace Unconventional_galery
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            _texture = Texture.LoadFromFile("Resources/container.png");
+            _texture = Texture.LoadFromFile("Resources/container.png",GameObjectType.NONE);
             _texture.Use(TextureUnit.Texture0);
 
 
@@ -230,7 +230,12 @@ namespace Unconventional_galery
 
             if (reloadingObjects)
             {
-                reloadingObjects = false;
+              //  Data.Textures.Clear(); -- for some reason it takes memory to clear
+                _objects.Clear();
+                _objectPoints.Clear();
+                _previewObjects.Clear();
+              
+                reloadingObjects = false;        
                 _objects = Data.MapLoader(_camera);
             }
 
@@ -273,7 +278,7 @@ namespace Unconventional_galery
 
             void ChangeTexture()
             {
-                _texture = Texture.LoadFromFile(_files[index]);
+                _texture = Texture.LoadFromFile(_files[index],GameObjectType.NONE);
             }
 
             const float cameraSpeed = 1.5f;

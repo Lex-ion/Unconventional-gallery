@@ -20,7 +20,7 @@ namespace Unconventional_galery
 
     internal class Data
     {
-
+        public static List<Texture> Textures = new List<Texture>();
 
 
         public static List<GameObject> MapLoader(Camera camera)
