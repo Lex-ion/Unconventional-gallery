@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
-using OpenTK.Mathematics;
+﻿using System.Globalization;
 
 namespace Unconventional_galery
 {
@@ -14,7 +6,7 @@ namespace Unconventional_galery
     {
         ADD_POINT_DATA = 1,
         EDITOR_PREVIEW = 2,
-        EDITOR_CLEAR= 3,
+        EDITOR_CLEAR = 3,
     }
 
     internal class DataBridge
@@ -29,7 +21,7 @@ namespace Unconventional_galery
     internal class Data
     {
 
-       
+
 
         public static List<GameObject> MapLoader(Camera camera)
         {
@@ -79,101 +71,10 @@ namespace Unconventional_galery
 
         public static List<string> Editor(Camera camera, Gallery gallery)
         {
-
-
-
-            string Error()
-            {
-                return "error";
-            }
-
             List<string> output = new List<string>();
 
-            OpenTK.Mathematics.Vector3 RoundVector(OpenTK.Mathematics.Vector3 vector3, int decimals)
-            {
-                return new OpenTK.Mathematics.Vector3((float)Math.Round(vector3.X, decimals, MidpointRounding.AwayFromZero), (float)Math.Round(vector3.Y, decimals, MidpointRounding.AwayFromZero), (float)Math.Round(vector3.Z, decimals, MidpointRounding.AwayFromZero));
-            }
-
-
-            Console.WriteLine("Enter debug key:");
-            string debugKey = Console.ReadLine();
-
-
-            string inputFromConsole;
-
-            int gameObjectType=0;
-            do
-            {
-                Console.WriteLine("Enter valid gameObjectType");
-                inputFromConsole = Console.ReadLine();
-            } while (!int.TryParse(inputFromConsole, out gameObjectType) || !Enum.IsDefined(typeof(GameObjectType), gameObjectType));
-
-            int gameObjectTypeOverride=-1;
-            Console.WriteLine("Do you wish to override? [Y]es anything else is no");
-            if (gameObjectType == -1)
-            { Console.WriteLine("Override is needed"); }
-
-            if (gameObjectType == -1 || Console.ReadKey(true).KeyChar == 'y')
-            {
-                do
-                {
-                    Console.WriteLine("Enter valid gameObjectType for override");
-                    inputFromConsole = Console.ReadLine();
-                } while (!int.TryParse(inputFromConsole, out gameObjectTypeOverride) || !Enum.IsDefined(typeof(GameObjectType), gameObjectTypeOverride) || gameObjectTypeOverride == -1);
-            }
-
-
-            int selection = 0;
-            bool selecting = true;
-            Console.WriteLine("Create [C]uboid or [P]lane?");
-            do
-            {
-
-                switch (Console.ReadKey(true).KeyChar)
-                {
-                    case 'c':
-                        selection = 1;
-                        selecting = false;
-                        Console.WriteLine("Selected cuboid");
-                        break;
-
-                    case 'p':
-                        selection = 2;
-                        selecting = false;
-                        Console.WriteLine("Selected plane");
-                        break;
-                }
-
-
-            } while (selecting);
-
-
-
-
-            int decimals;
-            do
-            {
-                Console.WriteLine("Set rounding (0 - 15)");
-                inputFromConsole = Console.ReadLine();
-            } while (!int.TryParse(inputFromConsole, out decimals) || decimals < 0 || decimals > 15);
-
-
-
-            Console.WriteLine("Set 2 or more vertexes. For adding fly to point and type to console add. When you are done press enter");
-
-            List<OpenTK.Mathematics.Vector3> vertices = new List<OpenTK.Mathematics.Vector3>();
-
-
-
-            Console.Write("Current position: ");
-            int[] cursorPos = { Console.CursorLeft, Console.CursorTop };
-            OpenTK.Mathematics.Vector3 lastDisplayedVector = new OpenTK.Mathematics.Vector3();
-            OpenTK.Mathematics.Vector3 midPoint = new OpenTK.Mathematics.Vector3();
-            float[] sample = { };
-
-
             float[] cube = new float[]
-                 {
+                {
                                 //back
                                 -1.0f, -1.0f, -1.0f,  1.0f, 0.0f,
                                  1.0f, -1.0f, -1.0f,  0.0f, 0.0f,
@@ -221,113 +122,54 @@ namespace Unconventional_galery
                                  1.0f,  1.0f,  1.0f,  1.0f, 0.0f,
                                 -1.0f,  1.0f,  1.0f,  0.0f, 0.0f,
                                 -1.0f,  1.0f, -1.0f,  0.0f, 1.0f };
-            while (true)
+            float[] sample = {
+             -1f, -1f, -1f,  0.0f, 0.0f,
+              1f, -1f, 1f,  1.0f, 0.0f,
+              1f,  1f, 1f,  1.0f, 1.0f,
+              1f,  1f, 1f,  1.0f, 1.0f,
+             -1f,  1f, -1f,  0.0f, 1.0f,
+             -1f, -1f, -1f,  0.0f, 0.0f
+                            }; 
+
+            string debugKey;
+            int gameObjectType = 0;
+            int selection = 0;
+            int gameObjectTypeOverride = -1;
+            int decimals;
+
+            OpenTK.Mathematics.Vector3 midPoint = new OpenTK.Mathematics.Vector3();
+            List<OpenTK.Mathematics.Vector3> vertices = new List<OpenTK.Mathematics.Vector3>();
+            List<float> vertexData = new List<float>();            
+            //-------- code
+
+
+            SetUp();
+            
+            Creator();
+
+            CreateOutput();
+
+            return output;
+
+
+            //---------
+            //Methods
+            string Error()
             {
-                int[] lastPos = { Console.CursorLeft, Console.CursorTop };
-
-
-
-                if (lastDisplayedVector != RoundVector(camera.Position, decimals))
-                {
-                    lastDisplayedVector = RoundVector(camera.Position, decimals);
-                    Console.SetCursorPosition(cursorPos[0], cursorPos[1]);
-                    Console.Write(new string(' ', Console.WindowWidth));
-                    Console.SetCursorPosition(cursorPos[0], cursorPos[1]);
-                    Console.Write(RoundVector(camera.Position, decimals));
-                    Console.SetCursorPosition(lastPos[0], lastPos[1]);
-                }
-
-
-
-
-                if (Console.KeyAvailable)
-                {
-                    string input = Console.ReadLine().ToLower();
-
-
-                    if (input == "add")
-                    {
-                        vertices.Add(RoundVector(camera.Position, decimals));
-
-                        //objectPoints.Add(new GameObject(camera, cube, "point", 0, vertices.Last(), new OpenTK.Mathematics.Vector3(45, 45, 45), new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f)));
-
-                        DataBridge.Data.Add(cube);
-                        DataBridge.Data.Add(vertices.Last());
-                        DataBridge.Data.Add(DataBridgeUsage.ADD_POINT_DATA);
-                        DataBridge.IsReady = true;
-                        Console.WriteLine($"Succesfully added {vertices.Last()}");
-                    }
-                    else if (input == "remove")
-                    {
-                        Console.WriteLine($"Removed {vertices.Last()}");
-                        vertices.Remove(vertices.Last());
-                        gallery._objectPoints.Remove(gallery._objectPoints.Last());
-
-                    }
-                    else if(input=="preview")
-                    {
-                        if (vertices.Count < 2)
-                        {
-                            Console.WriteLine("not enough vertices");
-                            continue;
-                        }
-
-
-                        GenerateData();
-                        DataBridge.Data.Add(sample);
-                        DataBridge.Data.Add(gameObjectType);
-                        DataBridge.Data.Add(midPoint);
-                        DataBridge.Data.Add(gameObjectTypeOverride);
-                        DataBridge.Data.Add(DataBridgeUsage.EDITOR_PREVIEW);
-                        DataBridge.IsReady = true;
-                    }
-                    else if (input == "clear")
-                    {
-                        DataBridge.Data.Add(DataBridgeUsage.EDITOR_CLEAR);
-                        DataBridge.IsReady = true;
-
-                    }
-
-                    else break;
-
-                }
-
-            }
-            Console.WriteLine($"Adding finished with total {vertices.Count} vertices");
-
-            List<float> vertexData = new List<float>();
-            void addToList(OpenTK.Mathematics.Vector3 vector3, float textureX, float textureY)
-            {
-                vertexData.Add(vector3.X);
-                vertexData.Add(vector3.Y);
-                vertexData.Add(vector3.Z);
-
-                vertexData.Add(textureX);
-                vertexData.Add(textureY);
+                return "error";
             }
 
-            
-
-            
-
+            OpenTK.Mathematics.Vector3 RoundVector(OpenTK.Mathematics.Vector3 vector3, int decimals)
+            {
+                return new OpenTK.Mathematics.Vector3((float)Math.Round(vector3.X, decimals, MidpointRounding.AwayFromZero), (float)Math.Round(vector3.Y, decimals, MidpointRounding.AwayFromZero), (float)Math.Round(vector3.Z, decimals, MidpointRounding.AwayFromZero));
+            }
 
             void GenerateData()
             {
                 if (vertices.Count == 2)
                 {
 
-                    if (selection == 2)
-                    {
-                        sample = new float[]{
-                                -1f, -1f, -1f,  0.0f, 0.0f,
-                                 1f, -1f, 1f,  1.0f, 0.0f,
-                                 1f,  1f, 1f,  1.0f, 1.0f,
-                                 1f,  1f, 1f,  1.0f, 1.0f,
-                                -1f,  1f, -1f,  0.0f, 1.0f,
-                                -1f, -1f, -1f,  0.0f, 0.0f
-                            };
-                    }
-                    else
+                    if (selection == 1)
                     {
                         sample = cube;
                     }
@@ -338,7 +180,7 @@ namespace Unconventional_galery
                     float height = Math.Abs(vertices[0].Y - vertices[1].Y) / 2;
                     float width = Math.Abs(vertices[0].Z - vertices[1].Z) / 2;
 
-                    
+
 
 
                     midPoint.X = (vertices[0].X + vertices[1].X) / 2;
@@ -358,37 +200,188 @@ namespace Unconventional_galery
                 }
             }
 
-
-
-
-            foreach (float f in sample)
-                vertexData.Add(f);
-
-
-
-            string constraint = "VERTICES\n";
-            for (int i = 0; i < vertexData.Count; i++)
+            void AddToList(OpenTK.Mathematics.Vector3 vector3, float textureX, float textureY)
             {
-                constraint += vertexData[i].ToString().Replace(",", ".") + "f";
-                if (i < vertexData.Count - 1)
-                    constraint += ",";
-            }
-            output.Add("NEW");
-            output.Add($"DebugKey:{debugKey},");
-            output.Add($"GameObjectType:{gameObjectType},");
-            output.Add($"WSC:{midPoint.X.ToString().Replace(",", ".")}|{midPoint.Y.ToString().Replace(",", ".")}|{midPoint.Z.ToString().Replace(",", ".")},");
-            output.Add("WSR:0|0|0,");
-            output.Add("Scale:1|1|1");
+                vertexData.Add(vector3.X);
+                vertexData.Add(vector3.Y);
+                vertexData.Add(vector3.Z);
 
-            if (gameObjectTypeOverride > -1)
+                vertexData.Add(textureX);
+                vertexData.Add(textureY);
+            }
+            
+            void SetUp()
             {
-                output.Add($",Override:{gameObjectTypeOverride}");
+                //debugKey
+                Console.WriteLine("Enter debug key:");
+                debugKey = Console.ReadLine();
+
+                //gameObjectType
+                do
+                {
+                    Console.WriteLine("Enter valid gameObjectType");
+                } while (!int.TryParse(Console.ReadLine(), out gameObjectType) || !Enum.IsDefined(typeof(GameObjectType), gameObjectType));
+                //override
+                Console.WriteLine("Do you wish to override? [Y]es anything else is no");
+                if (gameObjectType == -1)
+                {
+                    Console.WriteLine("Override is needed");
+                }
+                //override type
+                if (gameObjectType == -1 || Console.ReadKey(true).KeyChar == 'y')
+                {
+                    do
+                    {
+                        Console.WriteLine("Enter valid gameObjectType for override");
+                    } while (!int.TryParse(Console.ReadLine(), out gameObjectTypeOverride) || !Enum.IsDefined(typeof(GameObjectType), gameObjectTypeOverride) || gameObjectTypeOverride == -1);
+                }
+                //cuboid or plane
+                Console.WriteLine("Create [C]uboid or [P]lane?");
+                do
+                {
+
+                    switch (Console.ReadKey(true).KeyChar)
+                    {
+                        case 'c':
+                            selection = 1;
+                            Console.WriteLine("Selected cuboid");
+                            break;
+
+                        case 'p':
+                            selection = 2;
+                            Console.WriteLine("Selected plane");
+                            break;
+                    }
+
+
+                } while (selection == 0);
+                //rounding
+                do
+                {
+                    Console.WriteLine("Set rounding (0 - 15)");
+                } while (!int.TryParse(Console.ReadLine(), out decimals) || decimals < 0 || decimals > 15);
             }
 
-            output.Add(constraint);
+            void Preview()
+            {
+                if (vertices.Count < 2)
+                {
+                    Console.WriteLine("not enough vertices");
+                }
+                else
+                {
+                    GenerateData();
+                    DataBridge.Data.Add(sample);
+                    DataBridge.Data.Add(gameObjectType);
+                    DataBridge.Data.Add(midPoint);
+                    DataBridge.Data.Add(gameObjectTypeOverride);
+                    DataBridge.Data.Add(DataBridgeUsage.EDITOR_PREVIEW);
+                    DataBridge.IsReady = true;
+                }                              
+            }
+
+            void Creator()
+            {
+                Console.WriteLine("Set 2 or more vertexes. For adding fly to point and type to console add. When you are done press enter");
+                Console.Write("Current position: ");
+                int[] cursorPos = { Console.CursorLeft, Console.CursorTop };
+                bool run = true;
+                while (run)
+                {
+
+                    int[] lastPos = { Console.CursorLeft, Console.CursorTop };
+                    OpenTK.Mathematics.Vector3 lastDisplayedVector = new OpenTK.Mathematics.Vector3();
 
 
-            return output;
+                    //writes out coordinates
+                    if (lastDisplayedVector != RoundVector(camera.Position, decimals))
+                    {
+                        lastDisplayedVector = RoundVector(camera.Position, decimals);
+                        Console.SetCursorPosition(cursorPos[0], cursorPos[1]);
+                        Console.Write(new string(' ', Console.WindowWidth));
+                        Console.SetCursorPosition(cursorPos[0], cursorPos[1]);
+                        Console.Write(RoundVector(camera.Position, decimals));
+                        Console.SetCursorPosition(lastPos[0], lastPos[1]);
+                    }
+
+
+                    if (Console.KeyAvailable)
+                    {
+                        switch (Console.ReadLine().ToLower())
+                        {
+                            default:
+                                Console.WriteLine("Unknown command, if you wish to exit write \"Done\"");
+                                break;
+
+                            case "add":
+                                vertices.Add(RoundVector(camera.Position, decimals));
+
+                                DataBridge.Data.Add(cube);
+                                DataBridge.Data.Add(vertices.Last());
+                                DataBridge.Data.Add(DataBridgeUsage.ADD_POINT_DATA);
+                                DataBridge.IsReady = true;
+
+                                Console.WriteLine($"Succesfully added {vertices.Last()}");
+                                break;
+
+                            case "remove":
+                                Console.WriteLine($"Removed {vertices.Last()}");
+                                vertices.Remove(vertices.Last());
+                                gallery._objectPoints.Remove(gallery._objectPoints.Last());
+                                break;
+
+                            case "preview":
+                                Preview();
+                                break;
+
+                            case "clear":
+                                DataBridge.Data.Add(DataBridgeUsage.EDITOR_CLEAR);
+                                DataBridge.IsReady = true;
+                                break;
+
+                            case "save":
+                                break;
+
+                            case "done":
+                                run = false;
+                                break;
+
+                        }
+                    }
+                }
+                Console.WriteLine($"Adding finished with total {vertices.Count} vertices");
+            }
+
+            void CreateOutput()
+            {
+                GenerateData();
+
+                foreach (float f in sample)
+                    vertexData.Add(f);
+
+                string constraint = "VERTICES\n";
+
+                for (int i = 0; i < vertexData.Count; i++)
+                {
+                    constraint += vertexData[i].ToString().Replace(",", ".") + "f";
+                    if (i < vertexData.Count - 1)
+                        constraint += ",";
+                }
+
+                output.Add("NEW");
+                output.Add($"DebugKey:{debugKey},");
+                output.Add($"GameObjectType:{gameObjectType},");
+                output.Add($"WSC:{midPoint.X.ToString().Replace(",", ".")}|{midPoint.Y.ToString().Replace(",", ".")}|{midPoint.Z.ToString().Replace(",", ".")},");
+                output.Add("WSR:0|0|0,");
+                output.Add("Scale:1|1|1");
+
+                if (gameObjectTypeOverride > -1)
+                {
+                    output.Add($",Override:{gameObjectTypeOverride}");
+                }
+
+                output.Add(constraint);
+            }
         }
     }
 }
