@@ -25,6 +25,7 @@ namespace Unconventional_galery
         OBJECT_WALL = 1,
         OBJECT_DISPLAY_FRONT = 2,
         OBJECT_DISPLAY_BACK = 3,
+        OBJECT_TEMPORARY =4,
     }
 
     internal class GameObject
@@ -54,21 +55,26 @@ namespace Unconventional_galery
         public Vector3 _rotation { get; set; }
         public Vector3 _scale { get; set; }
 
-        private float[] DefaultIndices =
+
+       public  GameObject(Camera camera, float[] vertices ,string debugkey,GameObjectType gameObjectType, Vector3 worldSpaceCords, Vector3 worldSpaceRot, Vector3 scale, int textureOverride=-1,float[] indices = null, string[] shadersPath = null )
+        {
+
+
+
+         float[] DefaultIndices =
         {
             0, 1, 3,
             1, 2, 3
         };
 
-        private string[] DefaultShader =
+         string[] DefaultShader =
         {
-            "Shaders/shader.vert", 
+            "Shaders/shader.vert",
             "Shaders/shader.frag"
         };
 
-       public  GameObject(Camera camera, float[] vertices ,string debugkey,GameObjectType gameObjectType, Vector3 worldSpaceCords, Vector3 worldSpaceRot, Vector3 scale, int textureOverride=-1,float[] indices = null, string[] shadersPath = null )
-        {
-            _camera = camera;
+
+        _camera = camera;
             _vertices = vertices;
             
             _debugKey = debugkey;
@@ -125,9 +131,9 @@ namespace Unconventional_galery
 
             if (textureOverride == -1)
             {
-                _texture = Texture.LoadFromFile(Directory.GetFiles("Resources")[(int)_gameObjectType]);
+                _texture = Texture.LoadFromFile(Directory.GetFiles("Resources")[(int)_gameObjectType],gameObjectType);
             }else
-                _texture = Texture.LoadFromFile(Directory.GetFiles("Resources")[textureOverride]);
+                _texture = Texture.LoadFromFile(Directory.GetFiles("Resources")[textureOverride],gameObjectType);
 
             _texture.Use(TextureUnit.Texture0);
 

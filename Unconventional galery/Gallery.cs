@@ -110,8 +110,15 @@ namespace Unconventional_galery
         int index = 0;
 
         List<GameObject> _objects = new List<GameObject>();
+        public List<GameObject> _objectPoints = new List<GameObject>();
+        public List<GameObject> _previewObjects = new List<GameObject>();
 
         Task Task;
+
+        bool reloadingObjects = false;
+
+       
+        
 
         protected override void OnLoad()
         {
@@ -149,7 +156,7 @@ namespace Unconventional_galery
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            _texture = Texture.LoadFromFile("Resources/container.png");
+            _texture = Texture.LoadFromFile("Resources/container.png",GameObjectType.NONE);
             _texture.Use(TextureUnit.Texture0);
 
 
@@ -203,6 +210,17 @@ namespace Unconventional_galery
                 obj.Render();
             }
 
+            foreach (GameObject point in _objectPoints)
+            {
+                point.Render();
+                point._rotation += new Vector3((float)Math.Sin(-_time/10), 0, (float)Math.Sin(_time / 7)) * 0.01f * (float)Math.Sin(_time/10);
+            }
+
+            foreach (GameObject obj in _previewObjects)
+            {
+                obj.Render();
+            }
+
             SwapBuffers();
         }
 
@@ -210,6 +228,19 @@ namespace Unconventional_galery
         {
             base.OnUpdateFrame(e);
 
+            if (reloadingObjects)
+            {
+              //  Data.Textures.Clear(); -- for some reason it takes memory to clear
+                _objects.Clear();
+                _objectPoints.Clear();
+                _previewObjects.Clear();
+              
+                reloadingObjects = false;        
+                _objects = Data.MapLoader(_camera);
+            }
+
+            if (DataBridge.IsReady)
+                ReadDataBridge();
 
             if (!IsFocused) // Check to see if the window is focused
             {
@@ -247,7 +278,7 @@ namespace Unconventional_galery
 
             void ChangeTexture()
             {
-                _texture = Texture.LoadFromFile(_files[index]);
+                _texture = Texture.LoadFromFile(_files[index],GameObjectType.NONE);
             }
 
             const float cameraSpeed = 1.5f;
@@ -319,6 +350,30 @@ namespace Unconventional_galery
         
         }
 
+        void ReadDataBridge()
+        {
+            DataBridge.IsReady = false;
+
+
+            if ((DataBridgeUsage)DataBridge.Data.Last() == DataBridgeUsage.ADD_POINT_DATA)
+            {
+                _objectPoints.Add(new GameObject(_camera, (float[])DataBridge.Data[0], "objectPoint", GameObjectType.OBJECT_TEMPORARY, (OpenTK.Mathematics.Vector3)DataBridge.Data[1], new OpenTK.Mathematics.Vector3(45, 0, 45), new OpenTK.Mathematics.Vector3(0.05f, 0.05f, 0.05f)));
+                DataBridge.Data.Clear();
+            }
+            else if ((DataBridgeUsage)DataBridge.Data.Last() == DataBridgeUsage.EDITOR_PREVIEW)
+            {
+                _previewObjects.Add(new GameObject(_camera, (float[])DataBridge.Data[0], "preview", (GameObjectType)DataBridge.Data[1], (OpenTK.Mathematics.Vector3)DataBridge.Data[2], new OpenTK.Mathematics.Vector3(0, 0, 0), new OpenTK.Mathematics.Vector3(1f, 1f, 1f), (int)DataBridge.Data[3]));
+
+            } else if ((DataBridgeUsage)DataBridge.Data.Last() == DataBridgeUsage.EDITOR_CLEAR)
+            {
+                _previewObjects.Clear();
+                _objectPoints.Clear();
+            }
+
+                DataBridge.Data.Clear(); //just in case i forgot
+            
+        }
+
         
 
         void ReadConsoleInput()
@@ -327,13 +382,37 @@ namespace Unconventional_galery
             {
                
                     string input = Console.ReadLine().ToLower();
-                    if (input == "editor")
-                        Data.Editor(_camera);
-                    if (input == "reload")
-                        _objects = Data.MapLoader(_camera);
+                if (input == "editor")
+                    foreach(string line in Data.Editor(_camera,this))
+                        Console.WriteLine(line);
+
+
+
+                else if (input == "reload")
+                    reloadingObjects = true;
+                else if (input == "teleport")
+                    Teleport();
                 
             }
         }
+
+        void Teleport()
+        {
+            string[] nums= new string[3];
+            OpenTK.Mathematics.Vector3 pos = new OpenTK.Mathematics.Vector3();
+            do
+            {
+                Console.WriteLine("Write coordinates to teleport. Format: X,xf|Y,yf|Z,zf");
+                nums = Console.ReadLine().Replace(";","|").Split("|");
+                foreach (string num in nums)
+                {
+                    num.Replace("f", "").Replace(".",",");
+                }
+
+            } while (!float.TryParse(nums[0], out pos.X)|| !float.TryParse(nums[1], out pos.Y)|| !float.TryParse(nums[2], out pos.Z));
+            _camera.Position = pos;
+        }
+
 
         // In the mouse wheel function, we manage all the zooming of the camera.
         // This is simply done by changing the FOV of the camera.
