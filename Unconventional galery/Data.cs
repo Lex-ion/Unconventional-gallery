@@ -122,14 +122,17 @@ namespace Unconventional_galery
                                  1.0f,  1.0f,  1.0f,  1.0f, 0.0f,
                                 -1.0f,  1.0f,  1.0f,  0.0f, 0.0f,
                                 -1.0f,  1.0f, -1.0f,  0.0f, 1.0f };
-            float[] sample = {
+
+            float[] plane = {
              -1f, -1f, -1f,  0.0f, 0.0f,
               1f, -1f, 1f,  1.0f, 0.0f,
               1f,  1f, 1f,  1.0f, 1.0f,
               1f,  1f, 1f,  1.0f, 1.0f,
              -1f,  1f, -1f,  0.0f, 1.0f,
              -1f, -1f, -1f,  0.0f, 0.0f
-                            }; 
+                            };
+
+            float[] sample= new float[plane.Length];
 
             string debugKey;
             int gameObjectType = 0;
@@ -169,10 +172,14 @@ namespace Unconventional_galery
                 if (vertices.Count == 2)
                 {
 
+
+
                     if (selection == 1)
                     {
-                        sample = cube;
-                    }
+                        sample = new float[cube.Length];
+                        cube.CopyTo(sample, 0);
+                    } else
+                        plane.CopyTo(sample, 0);
 
 
 
@@ -195,8 +202,7 @@ namespace Unconventional_galery
                         sample[index + 1] *= height;
                         sample[index + 2] *= width;
                         index += 5;
-                    }
-
+                    }                    
                 }
             }
 
