@@ -254,8 +254,8 @@ namespace Unconventional_galery
                 {
                     do
                     {
-                        Console.WriteLine("Enter valid gameObjectType for override");
-                    } while (!int.TryParse(Console.ReadLine(), out gameObjectTypeOverride) || !Enum.IsDefined(typeof(GameObjectType), gameObjectTypeOverride) || gameObjectTypeOverride == -1);
+                        Console.WriteLine("Enter valid texture id for override");
+                    } while (!int.TryParse(Console.ReadLine(), out gameObjectTypeOverride) || gameObjectTypeOverride<0 || gameObjectTypeOverride>Directory.GetFiles(TexturesPath).Length);
                 }
                 //cuboid or plane
                 Console.WriteLine("Create [C]uboid or [P]lane?");
