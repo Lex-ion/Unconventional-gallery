@@ -27,6 +27,7 @@ namespace Unconventional_galery
         {
             CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
             ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
             List<GameObject> objects = new List<GameObject>();
 
             string[] raw = File.ReadAllText("Data/map.txt").Replace("\n", "").Replace("\r", "").Split("NEW");
@@ -142,7 +143,10 @@ namespace Unconventional_galery
 
             OpenTK.Mathematics.Vector3 midPoint = new OpenTK.Mathematics.Vector3();
             List<OpenTK.Mathematics.Vector3> vertices = new List<OpenTK.Mathematics.Vector3>();
-            List<float> vertexData = new List<float>();            
+            List<float> vertexData = new List<float>();
+
+            float textureCountX = 1;
+            float textureCountY = 1;
             //-------- code
 
 
@@ -171,7 +175,7 @@ namespace Unconventional_galery
             {
                 if (vertices.Count == 2)
                 {
-
+                    
 
 
                     if (selection == 1)
@@ -195,14 +199,17 @@ namespace Unconventional_galery
                     midPoint.Z = (vertices[0].Z + vertices[1].Z) / 2;
 
 
-                    int index = 0;
-                    while (index < sample.Length)
+                    for (int i=0; i < sample.Length;i+=5)
                     {
-                        sample[index] *= length;
-                        sample[index + 1] *= height;
-                        sample[index + 2] *= width;
-                        index += 5;
-                    }                    
+                        sample[i] *= length;
+                        sample[i + 1] *= height;
+                        sample[i + 2] *= width;
+                        sample[i + 3] *= textureCountX;
+                        sample[i + 4] *= textureCountY;
+                        
+                    }      
+                    
+
                 }
             }
 
@@ -345,6 +352,10 @@ namespace Unconventional_galery
                                 DataBridge.IsReady = true;
                                 break;
 
+                            case "texturecount":
+                                EditTextureCount();
+                                break;
+
                             case "save":
                                 break;
 
@@ -388,6 +399,30 @@ namespace Unconventional_galery
 
                 output.Add(constraint);
             }
+
+            void EditTextureCount()
+            {
+                CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
+
+                bool passed=false;
+                do
+                {
+                    Console.WriteLine("Repeat texture along X axis times: [N.n]");
+                    passed = float.TryParse(Console.ReadLine(), System.Globalization.NumberStyles.Any, ci, out textureCountX);
+                } while (!passed);
+                passed = false;
+                do
+                {
+                    Console.WriteLine("Repeat texture along Y axis times: [N.n]");
+                    passed = float.TryParse(Console.ReadLine(), System.Globalization.NumberStyles.Any, ci, out textureCountY);
+                } while (!passed);
+
+               
+                
+            }
+
         }
     }
 }
