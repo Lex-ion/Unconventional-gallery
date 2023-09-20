@@ -1,4 +1,7 @@
 ﻿using System.Globalization;
+using System.IO;
+using StbImageSharp;
+
 
 namespace Unconventional_galery
 {
@@ -21,7 +24,7 @@ namespace Unconventional_galery
     internal class Data
     {
         public static List<Texture> Textures = new List<Texture>();
-
+        public static string TexturesPath = "Resources";
 
         public static List<GameObject> MapLoader(Camera camera)
         {
@@ -145,9 +148,14 @@ namespace Unconventional_galery
             List<OpenTK.Mathematics.Vector3> vertices = new List<OpenTK.Mathematics.Vector3>();
             List<float> vertexData = new List<float>();
 
-            float textureCountX = 1;
-            float textureCountY = 1;
-            //-------- code
+
+            float[,] textureCounts = new float[6, 2];
+             //-------- code
+
+            for(int i = 0; i < textureCounts.GetLength(0); i++)
+                for (int j = 0; j < textureCounts.GetLength(1); j++)
+                    textureCounts[i, j] = 1;
+                
 
 
             SetUp();
@@ -204,11 +212,12 @@ namespace Unconventional_galery
                         sample[i] *= length;
                         sample[i + 1] *= height;
                         sample[i + 2] *= width;
-                        sample[i + 3] *= textureCountX;
-                        sample[i + 4] *= textureCountY;
+                        sample[i + 3] *= textureCounts[i/(5*6),0];
+                        sample[i + 4] *= textureCounts[i/(5*6),1];
                         
                     }      
-                    
+                        
+
 
                 }
             }
@@ -320,7 +329,7 @@ namespace Unconventional_galery
 
                     if (Console.KeyAvailable)
                     {
-                        switch (Console.ReadLine().ToLower())
+                        switch (Console.ReadLine().ToLower().Replace(" ",""))
                         {
                             default:
                                 Console.WriteLine("Unknown command, if you wish to exit write \"Done\"");
@@ -352,8 +361,12 @@ namespace Unconventional_galery
                                 DataBridge.IsReady = true;
                                 break;
 
-                            case "texturecount":
+                            case "settexturecount":
                                 EditTextureCount();
+                                break;
+
+                            case "generatetexturecount":
+                                GenerateTextureCount();
                                 break;
 
                             case "save":
@@ -391,6 +404,7 @@ namespace Unconventional_galery
                 output.Add($"WSC:{midPoint.X.ToString().Replace(",", ".")}|{midPoint.Y.ToString().Replace(",", ".")}|{midPoint.Z.ToString().Replace(",", ".")},");
                 output.Add("WSR:0|0|0,");
                 output.Add("Scale:1|1|1");
+                
 
                 if (gameObjectTypeOverride > -1)
                 {
@@ -405,22 +419,79 @@ namespace Unconventional_galery
                 CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
                 ci.NumberFormat.CurrencyDecimalSeparator = ".";
 
+                float[] floats = new float[2];
 
                 bool passed=false;
                 do
                 {
                     Console.WriteLine("Repeat texture along X axis times: [N.n]");
-                    passed = float.TryParse(Console.ReadLine(), System.Globalization.NumberStyles.Any, ci, out textureCountX);
+                    passed = float.TryParse(Console.ReadLine(), System.Globalization.NumberStyles.Any, ci, out floats[0]);
                 } while (!passed);
                 passed = false;
                 do
                 {
                     Console.WriteLine("Repeat texture along Y axis times: [N.n]");
-                    passed = float.TryParse(Console.ReadLine(), System.Globalization.NumberStyles.Any, ci, out textureCountY);
+                    passed = float.TryParse(Console.ReadLine(), System.Globalization.NumberStyles.Any, ci, out floats[1]);
                 } while (!passed);
 
-               
-                
+                for (int i = 0; i < textureCounts.GetLength(0); i++)
+                    for (int j = 0; j < textureCounts.GetLength(1); j++)
+                        textureCounts[i, j] = floats[j];
+            }
+
+            void GenerateTextureCount()
+            {
+                if (vertices.Count != 2)
+                    return; 
+
+
+
+                using (Stream stream = File.OpenRead(Directory.GetFiles(TexturesPath)[gameObjectTypeOverride>-1?gameObjectTypeOverride:gameObjectType]))
+                {
+                    ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+
+                    float length = Math.Abs(vertices[0].X - vertices[1].X);
+                    float height = Math.Abs(vertices[0].Y - vertices[1].Y);
+                    float width  = Math.Abs(vertices[0].Z - vertices[1].Z);
+
+                    Console.WriteLine($"Length: {length}");
+                    Console.WriteLine($"Height: {height}");
+                    Console.WriteLine($"width:  {width}");
+                    Console.WriteLine($"Texture resolution: {image.Width}x{image.Height}");
+
+
+                    CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                    ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
+                    float detailLevel = 0;
+                    bool passed = false;
+                    do
+                    {
+                        Console.WriteLine("Set detail level (best around 200-750)");
+                        passed = float.TryParse(Console.ReadLine(), System.Globalization.NumberStyles.Any, ci, out detailLevel);
+                    } while (!passed);
+
+                    length *= detailLevel;
+                    height *= detailLevel;
+                    width  *= detailLevel;
+
+
+                    for (int i = 0; i < 2; i++) //back&front
+                    {
+                        textureCounts[i, 0] = length / image.Width;
+                        textureCounts[i, 1] = height / image.Height;
+                    }
+                    for (int i = 2; i < 4; i++)
+                    {
+                        textureCounts[i, 0] = width / image.Width;
+                        textureCounts[i, 1] = height / image.Height;
+                    }
+                    for (int i = 4; i < 6; i++)
+                    {
+                        textureCounts[i, 0] = length / image.Width;
+                        textureCounts[i, 1] = width / image.Height;
+                    }
+                };
             }
 
         }

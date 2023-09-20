@@ -131,9 +131,9 @@ namespace Unconventional_galery
 
             if (textureOverride == -1)
             {
-                _texture = Texture.LoadFromFile(Directory.GetFiles("Resources")[(int)_gameObjectType],gameObjectType);
+                _texture = Texture.LoadFromFile(Directory.GetFiles(Data.TexturesPath)[(int)_gameObjectType],gameObjectType);
             }else
-                _texture = Texture.LoadFromFile(Directory.GetFiles("Resources")[textureOverride],gameObjectType);
+                _texture = Texture.LoadFromFile(Directory.GetFiles(Data.TexturesPath)[textureOverride],gameObjectType);
 
             _texture.Use(TextureUnit.Texture0);
 
