@@ -37,7 +37,13 @@ namespace Unconventional_galery
            //     Start();
            // }
 
-            Start();
+            using (Gallery galery = new Gallery(1920, 1080, "Test"))
+            {
+                galery.Run();
+            }
+
+
+
         }
 
         static void StartConfig()
