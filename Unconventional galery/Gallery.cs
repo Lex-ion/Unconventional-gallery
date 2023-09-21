@@ -106,7 +106,7 @@ namespace Unconventional_galery
 
         double _time = 0;
 
-        string[] _files = Directory.GetFiles("Resources");
+        string[] _files = Directory.GetFiles(Data.TexturesPath);
         int index = 0;
 
         List<GameObject> _objects = new List<GameObject>();
@@ -139,7 +139,7 @@ namespace Unconventional_galery
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices , BufferUsageHint.StaticDraw);
 
             // The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
-            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _shader = new Shader("Shaders/vertShader.vert", "Shaders/fragShader.frag");
             _shader.Use();
 
             // Because there's now 5 floats between the start of the first vertex and the start of the second,
@@ -156,7 +156,7 @@ namespace Unconventional_galery
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            _texture = Texture.LoadFromFile("Resources/container.png",GameObjectType.NONE);
+            _texture = Texture.LoadFromFile("Resources/.0_floor.png",GameObjectType.NONE);
             _texture.Use(TextureUnit.Texture0);
 
 
@@ -234,7 +234,9 @@ namespace Unconventional_galery
                 _objects.Clear();
                 _objectPoints.Clear();
                 _previewObjects.Clear();
-              
+
+                _files = Directory.GetFiles(Data.TexturesPath);
+
                 reloadingObjects = false;        
                 _objects = Data.MapLoader(_camera);
             }

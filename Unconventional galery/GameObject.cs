@@ -72,8 +72,8 @@ namespace Unconventional_galery
 
          string[] DefaultShader =
         {
-            "Shaders/shader.vert",
-            "Shaders/shader.frag"
+            "Shaders/vertShader.vert",
+            "Shaders/fragShader.frag"
         };
 
 
