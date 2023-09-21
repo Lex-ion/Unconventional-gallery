@@ -13,10 +13,31 @@ namespace Unconventional_galery
             if(!Directory.Exists(Data.TexturesPath)||!Directory.Exists("Shaders")||!Directory.Exists("Data"))
                 StartConfig();
 
-            using (Gallery galery = new Gallery(1920, 1080, "Test"))
-            {
-                galery.Run();
-            }
+            Start();
+
+        }
+
+        static void Start()
+        {  // uncomment when is the game finished
+           // try
+           // {
+           //
+           //     using (Gallery galery = new Gallery(1920, 1080, "Test"))
+           //     {
+           //         galery.Run();
+           //     }
+           //
+           // }
+           // catch
+           // {
+           //     Console.WriteLine("Something went wrong and program crashed, reinstalling...");
+           //     Console.Beep(2500, 50); 
+           //     Console.Beep(2000, 150);
+           //     StartConfig();
+           //     Start();
+           // }
+
+            Start();
         }
 
         static void StartConfig()
