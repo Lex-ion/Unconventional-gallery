@@ -26,6 +26,9 @@ namespace Unconventional_galery
         OBJECT_DISPLAY_FRONT = 2,
         OBJECT_DISPLAY_BACK = 3,
         OBJECT_TEMPORARY =4,
+        OBJECT_PILLAR=5,
+        OBJECT_DISPLAY_DETAIL=6,
+        OBJECT_PIPES=7,
     }
 
     internal class GameObject
