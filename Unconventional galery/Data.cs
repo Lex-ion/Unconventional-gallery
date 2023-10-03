@@ -442,9 +442,9 @@ namespace Unconventional_galery
             void GenerateTextureCount()
             {
                 if (vertices.Count != 2)
-                    return; 
+                    return;
 
-
+                SetAlingment();
 
                 using (Stream stream = File.OpenRead(Directory.GetFiles(TexturesPath)[gameObjectTypeOverride>-1?gameObjectTypeOverride:gameObjectType]))
                 {
@@ -492,6 +492,39 @@ namespace Unconventional_galery
                         textureCounts[i, 1] = width / image.Height;
                     }
                 };
+
+                int SetAlingment()
+                {
+                    int alingment =1;
+                    int cursorHeight = Console.CursorTop;
+                    string input;
+                    do
+                    {
+                        Console.SetCursorPosition(0,cursorHeight);
+                        Console.WriteLine("Current alingment:");
+
+                        for (int i = 3; i > 0; i--)
+                        {
+                            for (int j = 2; j >= 0; j--)
+                            {
+                                Console.ForegroundColor = i * 3 - j==alingment?ConsoleColor.Green:ConsoleColor.Gray;
+                                Console.Write(i * 3 - j + " ");
+                            }
+                            Console.WriteLine();
+                        }Console.ForegroundColor = ConsoleColor.Gray;
+
+                        Console.WriteLine("Set new alingment or write \"Done\"");
+
+
+
+                        input = Console.ReadLine();
+                        int.TryParse(input, out alingment);
+                        Math.Clamp(alingment, 1, 9);
+
+                    } while (input.ToLower()!="done");
+                    
+                    return alingment;
+                }
             }
 
         }
