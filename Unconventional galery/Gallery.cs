@@ -17,7 +17,7 @@ using StbImageSharp;
 
 namespace Unconventional_galery
 {
-    internal class Gallery: GameWindow
+    internal class Gallery : GameWindow
     {
         public Gallery(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
@@ -35,7 +35,7 @@ namespace Unconventional_galery
         // Because we're adding a texture, we modify the vertex array to include texture coordinates.
         // Texture coordinates range from 0.0 to 1.0, with (0.0, 0.0) representing the bottom left, and (1.0, 1.0) representing the top right.
         // The new layout is three floats to create a vertex, then two floats to create the coordinates.
-       float[] _vertices = {
+        float[] _vertices = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
      0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -78,7 +78,7 @@ namespace Unconventional_galery
     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
-       
+
         private readonly uint[] _indices =
         {
             0, 1, 3,
@@ -117,8 +117,8 @@ namespace Unconventional_galery
 
         bool reloadingObjects = false;
 
-       
-        
+
+
 
         protected override void OnLoad()
         {
@@ -136,7 +136,7 @@ namespace Unconventional_galery
 
             _elementBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices , BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
             // The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
             _shader = new Shader("Shaders/vertShader.vert", "Shaders/fragShader.frag");
@@ -156,7 +156,7 @@ namespace Unconventional_galery
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            _texture = Texture.LoadFromFile("Resources/.0_floor.png",GameObjectType.NONE);
+            _texture = Texture.LoadFromFile("Resources/.0_floor.png", GameObjectType.NONE);
             _texture.Use(TextureUnit.Texture0);
 
 
@@ -183,7 +183,7 @@ namespace Unconventional_galery
 
             _time += 8 * e.Time;
 
-            GL.Clear(ClearBufferMask.ColorBufferBit|ClearBufferMask.DepthBufferBit);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             GL.BindVertexArray(_vertexArrayObject);
 
@@ -196,15 +196,15 @@ namespace Unconventional_galery
             _shader.SetMatrix4("view", _camera.GetViewMatrix());
             _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
-            
+
 
             _texture.Use(TextureUnit.Texture0);
             _shader.Use();
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
-            _objects[0]._scale += Vector3.One *0.0001f* (float)Math.Sin(_time/10);
-            _objects[0]._position += new Vector3(-1,0,0) * 0.0001f * (float)Math.Sin(_time / 10);
+            _objects[0]._scale += Vector3.One * 0.0001f * (float)Math.Sin(_time / 10);
+            _objects[0]._position += new Vector3(-1, 0, 0) * 0.0001f * (float)Math.Sin(_time / 10);
             foreach (GameObject obj in _objects)
             {
                 obj.Render();
@@ -213,7 +213,7 @@ namespace Unconventional_galery
             foreach (GameObject point in _objectPoints)
             {
                 point.Render();
-                point._rotation += new Vector3((float)Math.Sin(-_time/10), 0, (float)Math.Sin(_time / 7)) * 0.01f * (float)Math.Sin(_time/10);
+                point._rotation += new Vector3((float)Math.Sin(-_time / 10), 0, (float)Math.Sin(_time / 7)) * 0.01f * (float)Math.Sin(_time / 10);
             }
 
             foreach (GameObject obj in _previewObjects)
@@ -230,17 +230,17 @@ namespace Unconventional_galery
 
             if (reloadingObjects)
             {
-                foreach(Texture texture in Data.Textures)
+                foreach (Texture texture in Data.Textures)
                     GL.DeleteTexture(texture.Handle);
 
-                Data.Textures.Clear(); 
+                Data.Textures.Clear();
                 _objects.Clear();
                 _objectPoints.Clear();
                 _previewObjects.Clear();
 
                 _files = Directory.GetFiles(Data.TexturesPath);
 
-                reloadingObjects = false;        
+                reloadingObjects = false;
                 _objects = Data.MapLoader(_camera);
             }
 
@@ -283,13 +283,13 @@ namespace Unconventional_galery
 
             void ChangeTexture()
             {
-                _texture = Texture.LoadFromFile(_files[index],GameObjectType.NONE);
+                _texture = Texture.LoadFromFile(_files[index], GameObjectType.NONE);
             }
 
             const float cameraSpeed = 1.5f;
             const float sensitivity = 0.2f;
 
-            
+
 
             if (input.IsKeyDown(Keys.W))
             {
@@ -343,19 +343,19 @@ namespace Unconventional_galery
 
 
             //was broken because on top is if statment that requires to be focused on game or it will return d
-          //  if (Console.KeyAvailable)
-          //  {
-          //      Action action = ()=>{ 
-          //              ReadConsoleInput();
-          //          };
-          //      
-          //      if (Task.Status != TaskStatus.Running)
-          //      {
-          //          Task.Run(action);
-          //      }
-          //      
-          //  }
-        
+            //  if (Console.KeyAvailable)
+            //  {
+            //      Action action = ()=>{ 
+            //              ReadConsoleInput();
+            //          };
+            //      
+            //      if (Task.Status != TaskStatus.Running)
+            //      {
+            //          Task.Run(action);
+            //      }
+            //      
+            //  }
+
         }
 
         void ReadDataBridge()
@@ -378,31 +378,50 @@ namespace Unconventional_galery
                 _objectPoints.Clear();
             }
 
-                DataBridge.Data.Clear(); //just in case i forgot
-            
+            DataBridge.Data.Clear(); //just in case i forgot
+
         }
 
-        
+
 
         void ReadConsoleInput()
         {
+            TeleportCallBack teleportCallBack = Teleport;
+            ReloadCallBack reloadCallBack = Reload;
+            EditorCallBack editorCallBack = Editor;
+
+            Dictionary<String, Delegate> commands = new Dictionary<string, Delegate>();
+            commands.Add("teleport", teleportCallBack);
+            commands.Add("reload", reloadCallBack);
+            commands.Add("editor", editorCallBack);
+
             while (true)
             {
-               
-                    string input = Console.ReadLine().ToLower();
-                if (input == "editor")
-                    foreach(string line in Data.Editor(_camera,this))
-                        Console.WriteLine(line);
-
-
-
-                else if (input == "reload")
-                    reloadingObjects = true;
-                else if (input == "teleport")
-                    Teleport();
-                
+                try
+                {
+                    commands[Console.ReadLine().ToLower()].DynamicInvoke();
+                }
+                catch (KeyNotFoundException)
+                {
+                    Console.WriteLine("Unknown command!");
+                }
             }
         }
+
+        delegate void EditorCallBack();
+        void Editor()
+        {
+            foreach (string line in Data.Editor(_camera, this))
+                Console.WriteLine(line);
+        }
+
+        delegate void ReloadCallBack();
+        void Reload()
+        {
+            reloadingObjects = true;
+        }
+
+        delegate void TeleportCallBack();
 
         void Teleport()
         {
@@ -420,7 +439,7 @@ namespace Unconventional_galery
             } while (!float.TryParse(nums[0], out pos.X)|| !float.TryParse(nums[1], out pos.Y)|| !float.TryParse(nums[2], out pos.Z));
             _camera.Position = pos;
         }
-
+        
 
         // In the mouse wheel function, we manage all the zooming of the camera.
         // This is simply done by changing the FOV of the camera.

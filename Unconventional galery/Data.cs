@@ -25,7 +25,7 @@ namespace Unconventional_galery
     {
         public static List<Texture> Textures = new List<Texture>();
         public static string TexturesPath = "Resources";
-
+        public static string MapPath = "Data/Map.txt";
         public static List<GameObject> MapLoader(Camera camera)
         {
             CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
@@ -148,6 +148,7 @@ namespace Unconventional_galery
             List<OpenTK.Mathematics.Vector3> vertices = new List<OpenTK.Mathematics.Vector3>();
             List<float> vertexData = new List<float>();
 
+            bool creatorLoop = true;
 
             float[,] textureCounts = new float[6, 2];
              //-------- code
@@ -302,13 +303,37 @@ namespace Unconventional_galery
                 }                              
             }
 
+            
             void Creator()
             {
+                AddCallBack addCallBack = Add;
+                RemoveCallBack removeCallBack = Remove;
+                PreviewCallBack previewCallBack = Preview;
+                ClearCallBack clearCallBack = Clear;
+                EditTextureCountCallBack editTextureCountCallBack = EditTextureCount;
+                GenerateTextureCountCallBack generateTextureCountCallBack = GenerateTextureCount;
+                DoneCallBack doneCallBack = Done;
+                SaveCallBack saveCallBack = Save;
+
+                Dictionary<String, Delegate> creatorCommands = new Dictionary<String, Delegate>();
+                creatorCommands.Add("add",addCallBack);
+                creatorCommands.Add("remove", removeCallBack);
+                creatorCommands.Add("preview",previewCallBack);
+                creatorCommands.Add("clear", clearCallBack);
+                creatorCommands.Add("edittexturecount",editTextureCountCallBack);
+                creatorCommands.Add("etc", editTextureCountCallBack);
+                creatorCommands.Add("generatetexturecount", generateTextureCountCallBack);
+                creatorCommands.Add("gtc", generateTextureCountCallBack);
+                creatorCommands.Add("done", doneCallBack);
+                creatorCommands.Add("save", saveCallBack);
+
+
                 Console.WriteLine("Set 2 or more vertexes. For adding fly to point and type to console add. When you are done press enter");
                 Console.Write("Current position: ");
                 int[] cursorPos = { Console.CursorLeft, Console.CursorTop };
-                bool run = true;
-                while (run)
+               
+
+                while (creatorLoop)
                 {
 
                     int[] lastPos = { Console.CursorLeft, Console.CursorTop };
@@ -329,57 +354,56 @@ namespace Unconventional_galery
 
                     if (Console.KeyAvailable)
                     {
-                        switch (Console.ReadLine().ToLower().Replace(" ",""))
+                        try
                         {
-                            default:
-                                Console.WriteLine("Unknown command, if you wish to exit write \"Done\"");
-                                break;
-
-                            case "add":
-                                vertices.Add(RoundVector(camera.Position, decimals));
-
-                                DataBridge.Data.Add(cube);
-                                DataBridge.Data.Add(vertices.Last());
-                                DataBridge.Data.Add(DataBridgeUsage.ADD_POINT_DATA);
-                                DataBridge.IsReady = true;
-
-                                Console.WriteLine($"Succesfully added {vertices.Last()}");
-                                break;
-
-                            case "remove":
-                                Console.WriteLine($"Removed {vertices.Last()}");
-                                vertices.Remove(vertices.Last());
-                                gallery._objectPoints.Remove(gallery._objectPoints.Last());
-                                break;
-
-                            case "preview":
-                                Preview();
-                                break;
-
-                            case "clear":
-                                DataBridge.Data.Add(DataBridgeUsage.EDITOR_CLEAR);
-                                DataBridge.IsReady = true;
-                                break;
-
-                            case "settexturecount":
-                                EditTextureCount();
-                                break;
-
-                            case "generatetexturecount":
-                                GenerateTextureCount();
-                                break;
-
-                            case "save":
-                                break;
-
-                            case "done":
-                                run = false;
-                                break;
-
+                            creatorCommands[Console.ReadLine().ToLower()].DynamicInvoke();
+                        }
+                        catch (KeyNotFoundException)
+                        {
+                            Console.WriteLine("Unknown command!");
                         }
                     }
                 }
                 Console.WriteLine($"Adding finished with total {vertices.Count} vertices");
+            }
+
+            void Save()
+            {
+                CreateOutput();
+                
+                File.AppendAllLines(MapPath, output);
+
+                Done();
+            }
+
+            void Done()
+            {
+                creatorLoop = false;
+            }
+
+            void Clear()
+            {
+                DataBridge.Data.Add(DataBridgeUsage.EDITOR_CLEAR);
+                DataBridge.IsReady = true;
+            }
+
+            void Remove()
+            {
+                Console.WriteLine($"Removed {vertices.Last()}");
+                vertices.Remove(vertices.Last());
+                gallery._objectPoints.Remove(gallery._objectPoints.Last());
+            }
+
+            void Add()
+            {
+                vertices.Add(RoundVector(camera.Position, decimals));
+
+                DataBridge.Data.Add(cube);
+                DataBridge.Data.Add(vertices.Last());
+                DataBridge.Data.Add(DataBridgeUsage.ADD_POINT_DATA);
+                DataBridge.IsReady = true;
+
+                Console.WriteLine($"Succesfully added {vertices.Last()}");
             }
 
             void CreateOutput()
@@ -527,6 +551,16 @@ namespace Unconventional_galery
                 }
             }
 
+           
+
         }
+        delegate void AddCallBack();
+        delegate void RemoveCallBack();
+        delegate void PreviewCallBack();
+        delegate void ClearCallBack();
+        delegate void EditTextureCountCallBack();
+        delegate void GenerateTextureCountCallBack();
+        delegate void DoneCallBack();
+        delegate void SaveCallBack();
     }
 }
