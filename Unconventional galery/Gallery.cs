@@ -293,12 +293,12 @@ namespace Unconventional_galery
 
             if (input.IsKeyDown(Keys.W))
             {
-                _camera.Position += _camera.Front * cameraSpeed * (float)e.Time; // Forward
+                _camera.Position += Vector3.Normalize(Vector3.Cross(Vector3.UnitY, _camera.Right)) * cameraSpeed * (float)e.Time; // Forward
             }
 
             if (input.IsKeyDown(Keys.S))
             {
-                _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time; // Backwards
+                _camera.Position -= Vector3.Normalize(Vector3.Cross(Vector3.UnitY, _camera.Right)) * cameraSpeed * (float)e.Time; // Backwards
             }
             if (input.IsKeyDown(Keys.A))
             {
@@ -310,11 +310,11 @@ namespace Unconventional_galery
             }
             if (input.IsKeyDown(Keys.Space))
             {
-                _camera.Position += _camera.Up * cameraSpeed * (float)e.Time; // Up
+                _camera.Position += Vector3.UnitY * cameraSpeed * (float)e.Time; // Up
             }
             if (input.IsKeyDown(Keys.LeftShift))
             {
-                _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time; // Down
+                _camera.Position -= Vector3.UnitY * cameraSpeed * (float)e.Time; // Down
             }
 
             // Get the mouse state
