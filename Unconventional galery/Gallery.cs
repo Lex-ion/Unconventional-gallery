@@ -317,6 +317,9 @@ namespace Unconventional_galery
                 _camera.Position -= Vector3.UnitY * cameraSpeed * (float)e.Time; // Down
             }
 
+            if (input.IsKeyPressed(Keys.F5))
+                reloadingObjects = true;
+
             // Get the mouse state
             var mouse = MouseState;
 
