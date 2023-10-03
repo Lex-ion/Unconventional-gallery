@@ -230,7 +230,10 @@ namespace Unconventional_galery
 
             if (reloadingObjects)
             {
-              //  Data.Textures.Clear(); -- for some reason it takes memory to clear
+                foreach(Texture texture in Data.Textures)
+                    GL.DeleteTexture(texture.Handle);
+
+                Data.Textures.Clear(); 
                 _objects.Clear();
                 _objectPoints.Clear();
                 _previewObjects.Clear();
