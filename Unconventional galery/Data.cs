@@ -306,26 +306,21 @@ namespace Unconventional_galery
             
             void Creator()
             {
-                AddCallBack addCallBack = Add;
-                RemoveCallBack removeCallBack = Remove;
-                PreviewCallBack previewCallBack = Preview;
-                ClearCallBack clearCallBack = Clear;
-                EditTextureCountCallBack editTextureCountCallBack = EditTextureCount;
-                GenerateTextureCountCallBack generateTextureCountCallBack = GenerateTextureCount;
-                DoneCallBack doneCallBack = Done;
-                SaveCallBack saveCallBack = Save;
 
-                Dictionary<String, Delegate> creatorCommands = new Dictionary<String, Delegate>();
-                creatorCommands.Add("add",addCallBack);
-                creatorCommands.Add("remove", removeCallBack);
-                creatorCommands.Add("preview",previewCallBack);
-                creatorCommands.Add("clear", clearCallBack);
-                creatorCommands.Add("edittexturecount",editTextureCountCallBack);
-                creatorCommands.Add("etc", editTextureCountCallBack);
-                creatorCommands.Add("generatetexturecount", generateTextureCountCallBack);
-                creatorCommands.Add("gtc", generateTextureCountCallBack);
-                creatorCommands.Add("done", doneCallBack);
-                creatorCommands.Add("save", saveCallBack);
+
+                Dictionary<string, Action> creatorCommands = new Dictionary<string, Action>
+                {
+                    { "add", Add },
+                    { "remove", Remove },
+                    { "preview", Preview },
+                    { "clear", Clear },
+                    { "edittexturecount", EditTextureCount },
+                    { "etc", EditTextureCount },
+                    { "generatetexturecount", GenerateTextureCount },
+                    { "gtc", GenerateTextureCount },
+                    { "done", Done },
+                    { "save", Save }
+                };
 
 
                 Console.WriteLine("Set 2 or more vertexes. For adding fly to point and type to console add. When you are done press enter");
@@ -554,13 +549,6 @@ namespace Unconventional_galery
            
 
         }
-        delegate void AddCallBack();
-        delegate void RemoveCallBack();
-        delegate void PreviewCallBack();
-        delegate void ClearCallBack();
-        delegate void EditTextureCountCallBack();
-        delegate void GenerateTextureCountCallBack();
-        delegate void DoneCallBack();
-        delegate void SaveCallBack();
+       
     }
 }

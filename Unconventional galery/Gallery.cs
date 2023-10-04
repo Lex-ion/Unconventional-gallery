@@ -386,14 +386,14 @@ namespace Unconventional_galery
 
         void ReadConsoleInput()
         {
-            TeleportCallBack teleportCallBack = Teleport;
-            ReloadCallBack reloadCallBack = Reload;
-            EditorCallBack editorCallBack = Editor;
 
-            Dictionary<String, Delegate> commands = new Dictionary<string, Delegate>();
-            commands.Add("teleport", teleportCallBack);
-            commands.Add("reload", reloadCallBack);
-            commands.Add("editor", editorCallBack);
+
+            Dictionary<string, Action> commands = new Dictionary<string, Action>
+            {
+                { "teleport", Teleport },
+                { "reload", Reload },
+                { "editor", Editor }
+            };
 
             while (true)
             {
@@ -408,20 +408,17 @@ namespace Unconventional_galery
             }
         }
 
-        delegate void EditorCallBack();
         void Editor()
         {
             foreach (string line in Data.Editor(_camera, this))
                 Console.WriteLine(line);
         }
 
-        delegate void ReloadCallBack();
         void Reload()
         {
             reloadingObjects = true;
         }
 
-        delegate void TeleportCallBack();
 
         void Teleport()
         {
