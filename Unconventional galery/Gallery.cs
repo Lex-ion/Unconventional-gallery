@@ -293,7 +293,13 @@ namespace Unconventional_galery
 
             if (input.IsKeyDown(Keys.W))
             {
-                _camera.Position += Vector3.Normalize(Vector3.Cross(Vector3.UnitY, _camera.Right)) * cameraSpeed * (float)e.Time; // Forward
+                Vector3 destination =  Vector3.Normalize(Vector3.Cross(Vector3.UnitY, _camera.Right)) * cameraSpeed * (float)e.Time;
+                if(!IsColliding(_camera.Position, _camera.Position+destination))
+                    _camera.Position += destination;
+               else
+                   _camera.Position += destination -new Vector3(destination.X,0,0);
+
+                // Forward
             }
 
             if (input.IsKeyDown(Keys.S))
@@ -454,6 +460,63 @@ namespace Unconventional_galery
             GL.Viewport(0, 0, Size.X, Size.Y);
             // We need to update the aspect ratio once the window has been resized.
             _camera.AspectRatio = Size.X / (float)Size.Y;
+        }
+
+        bool IsColliding(Vector3 currentPos, Vector3 targetPos)
+        {
+            
+
+            foreach (GameObject gameObject in _objects)
+            {
+                Vector3 WSP = gameObject._position;
+
+                if (Vector3.Distance(WSP, currentPos) > 15)
+                    continue;
+
+                List<Vector3> points = new List<Vector3>();
+                for (int i = 0; i < gameObject._vertices.Count()/5; i+=5)
+                {
+                    points.Add(new Vector3( gameObject._vertices[i], gameObject._vertices[i+1], gameObject._vertices[i+2]));
+                }
+                for (int i = 0; i < points.Count / 3; i += 3)
+                {
+                    Vector3[] currentPoints =
+                    {
+                        points[i],points[i+1],points[i+2]
+                    };
+
+                    
+
+                    var top = currentPoints[currentPoints.Select ((value, index) => new {Value = value,Index = index}).Aggregate((a,b)=>(a.Value.Y>b.Value.Y)?a:b).Index]+WSP;
+                    var left = currentPoints[currentPoints.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value.X > b.Value.X&&a.Value.Y!=top.Y) ? a : b).Index]+WSP;
+                    var right = currentPoints[currentPoints.Select((value, index) => new { Value = value, Index = index }).Aggregate((a, b) => (a.Value.X < b.Value.X && a.Value.Y != top.Y) ? a : b).Index] + WSP;
+                    
+                    
+                    
+                    float x = top.X;
+                    float z = top.Z;
+                    float y = top.Y;
+
+                    if (currentPos.X <= x && x <= targetPos.X || targetPos.X <= x && x <= currentPos.X)
+                    {
+                        return true;
+                    }
+
+                    if (currentPos.Z <= z && z <= targetPos.Z || targetPos.Z <= z && z <= currentPos.Z)
+                    {
+                        return true;
+                    }
+                    if (currentPos.Y <= y && y <= targetPos.Y || targetPos.Z <= y && y <= currentPos.Y)
+                    {
+                        return true;
+                    }
+                }
+
+ 
+            }
+
+
+            return false;
         }
     }
 }
