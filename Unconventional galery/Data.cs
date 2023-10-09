@@ -12,6 +12,13 @@ namespace Unconventional_galery
         EDITOR_CLEAR = 3,
     }
 
+    enum DataFormating
+    {
+        CHUNK_FORMAT = 1,
+        FACES_FORMAT=2,
+        TRIS_FORMAT=3,
+    }
+
     internal class DataBridge
     {
         public static List<object> Data = new List<object>();
@@ -151,6 +158,8 @@ namespace Unconventional_galery
             bool creatorLoop = true;
 
             float[,] textureCounts = new float[6, 2];
+
+            DataFormating dataFormating= DataFormating.FACES_FORMAT;
              //-------- code
 
             for(int i = 0; i < textureCounts.GetLength(0); i++)
@@ -319,7 +328,10 @@ namespace Unconventional_galery
                     { "generatetexturecount", GenerateTextureCount },
                     { "gtc", GenerateTextureCount },
                     { "done", Done },
-                    { "save", Save }
+                    { "save", Save },
+                    {"setformating",SetFormating },
+                    {"sf",SetFormating }
+
                 };
 
 
@@ -413,8 +425,23 @@ namespace Unconventional_galery
                 for (int i = 0; i < vertexData.Count; i++)
                 {
                     constraint += vertexData[i].ToString().Replace(",", ".") + "f";
+
+                    
+
                     if (i < vertexData.Count - 1)
                         constraint += ",";
+
+                    
+
+                    if ((i +1)% 5 == 0 )
+                        constraint += "\n";
+                    if ((i + 1) % 30 == 0&&(int)dataFormating>1)
+                        constraint += "\n";
+                    if((i+1)%15==0&&(int)dataFormating>2)
+                        constraint+= "\n";
+
+                   
+
                 }
 
                 output.Add("NEW");
@@ -545,10 +572,24 @@ namespace Unconventional_galery
                     return alingment;
                 }
             }
+            void SetFormating()
+            {
+                string[] names = Enum.GetNames(typeof(DataFormating));
+                int[] values = (int[])Enum.GetValues(typeof(DataFormating));
 
-           
+                do
+                {
+                    Console.WriteLine("Set data formating");
+                    for (int i = 0; i < names.Length; i++)
+                    {
+                        Console.WriteLine($"{names[i]}-{values[i]}");
+                    }
 
+                } while (!Enum.TryParse(Console.ReadLine(),true,out dataFormating));
+                Console.WriteLine($"set formating is {Enum.GetName(dataFormating)}");
+    
+            }
         }
-       
+
     }
 }
